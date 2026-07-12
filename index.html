@@ -49,8 +49,11 @@
 <!-- ONBOARDING -->
 <div class="tab active" id="onboarding">
   <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-    <label style="font-size: 13px; color: #777; white-space: nowrap;">שם לקוח:</label>
-    <input type="text" id="client-name-input" placeholder="הקלידי שם לקוח..." style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    <label style="font-size: 13px; color: #777; white-space: nowrap;">לקוח נוכחי:</label>
+    <select id="onboarding-client-select" style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+      <option value="">-- בחר לקוח --</option>
+    </select>
+    <button onclick="newOnboardingClient()" style="padding: 8px 16px; background: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">לקוח חדש</button>
   </div>
   <div style="margin-bottom: 16px; font-size: 12px; color: #999; text-align: center;">
     <span id="prog-text-top">0 / 14 סעיפים</span>
@@ -280,6 +283,15 @@ function showTab(name, btn) {
   btn.classList.add('active');
 }
 
+function getCurrentClient() {
+  return document.getElementById('onboarding-client-select').value || localStorage.getItem('currentClient') || '';
+}
+
+function setCurrentClient(name) {
+  localStorage.setItem('currentClient', name);
+  document.getElementById('onboarding-client-select').value = name;
+}
+
 function updateProgress() {
   var all = document.querySelectorAll('.chk');
   var done = 0;
@@ -296,17 +308,26 @@ function saveCheckboxes() {
   var all = document.querySelectorAll('.chk');
   var states = [];
   for (var i = 0; i < all.length; i++) states.push(all[i].checked ? 1 : 0);
-  localStorage.setItem('onboarding_checkboxes', JSON.stringify(states));
+  var client = getCurrentClient();
+  if (client) {
+    localStorage.setItem('onboarding_checkboxes_' + client, JSON.stringify(states));
+  }
 }
 
 function loadCheckboxes() {
-  var saved = localStorage.getItem('onboarding_checkboxes');
+  var client = getCurrentClient();
+  if (!client) return;
+  var saved = localStorage.getItem('onboarding_checkboxes_' + client);
   if (saved) {
     var states = JSON.parse(saved);
     var all = document.querySelectorAll('.chk');
     for (var i = 0; i < all.length && i < states.length; i++) {
       all[i].checked = states[i] === 1;
     }
+    updateProgress();
+  } else {
+    var all = document.querySelectorAll('.chk');
+    for (var i = 0; i < all.length; i++) all[i].checked = false;
     updateProgress();
   }
 }
@@ -345,14 +366,27 @@ function saveClients(clients) {
 
 function populateClientSelect() {
   var clients = loadClients();
+
   var select = document.getElementById('client-select');
-  if (!select) return;
-  select.innerHTML = '<option value="">-- בחר לקוח קיים --</option>';
-  for (var name in clients) {
-    var opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name;
-    select.appendChild(opt);
+  if (select) {
+    select.innerHTML = '<option value="">-- בחר לקוח קיים --</option>';
+    for (var name in clients) {
+      var opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      select.appendChild(opt);
+    }
+  }
+
+  var obSelect = document.getElementById('onboarding-client-select');
+  if (obSelect) {
+    obSelect.innerHTML = '<option value="">-- בחר לקוח --</option>';
+    for (var name in clients) {
+      var opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      obSelect.appendChild(opt);
+    }
   }
 }
 
@@ -417,6 +451,43 @@ function newClient() {
   document.getElementById('client-preview').style.display = 'none';
 }
 
+function newOnboardingClient() {
+  var name = prompt('שם הלקוח החדש:');
+  if (name && name.trim()) {
+    name = name.trim();
+    var clients = loadClients();
+    if (!clients[name]) {
+      clients[name] = {
+        businessName: name,
+        businessField: '',
+        businessDuration: '',
+        role: '',
+        employees: 0,
+        email: '',
+        tasks: [],
+        otherTasks: '',
+        tools: [],
+        otherTools: '',
+        workHours: '',
+        commMethod: '',
+        updateFreq: '',
+        accountant: '',
+        lawyer: '',
+        keyContacts: '',
+        expectations: '',
+        startFrom: '',
+        hours: 0,
+        cost: 0
+      };
+      saveClients(clients);
+    }
+    setCurrentClient(name);
+    populateClientSelect();
+    loadCheckboxes();
+    updateTracker();
+  }
+}
+
 function saveClient() {
   var name = document.getElementById('business-name').value.trim();
   if (!name) { alert('הזן שם עסק'); return; }
@@ -453,8 +524,11 @@ function saveClient() {
     cost: parseInt(document.getElementById('client-cost').value) || 0
   };
   saveClients(clients);
+  setCurrentClient(name);
   populateClientSelect();
   showPreview(name);
+  loadCheckboxes();
+  updateTracker();
   alert('לקוח נשמר בהצלחה!');
 }
 
@@ -483,26 +557,26 @@ function updateTracker() {
   var tbody = document.getElementById('tracker-tbody');
   if (!tbody) return;
 
-  var all = document.querySelectorAll('.chk');
-  var stage1 = 0, stage2 = 0, stage3 = 0;
-
-  for (var i = 0; i < 7 && i < all.length; i++) if (all[i].checked) stage1++;
-  for (var i = 7; i < 11 && i < all.length; i++) if (all[i].checked) stage2++;
-  for (var i = 11; i < 14 && i < all.length; i++) if (all[i].checked) stage3++;
-
+  var currentClient = getCurrentClient();
   var clients = loadClients();
-  var clientName = document.getElementById('client-name-input').value.trim();
-  var currentClient = clientName || 'נובו נדל"ן';
 
   var totalRevenue = 0;
   tbody.innerHTML = '';
-  var completedCount = 0;
 
   for (var name in clients) {
     var c = clients[name];
-    var color1 = stage1 === 7 && name === currentClient ? '#1a1a2e' : '#ccc';
-    var color2 = stage2 === 4 && name === currentClient ? '#1a1a2e' : '#ccc';
-    var color3 = stage3 === 3 && name === currentClient ? '#1a1a2e' : '#ccc';
+
+    var stage1 = 0, stage2 = 0, stage3 = 0;
+    if (name === currentClient) {
+      var all = document.querySelectorAll('.chk');
+      for (var i = 0; i < 7 && i < all.length; i++) if (all[i].checked) stage1++;
+      for (var i = 7; i < 11 && i < all.length; i++) if (all[i].checked) stage2++;
+      for (var i = 11; i < 14 && i < all.length; i++) if (all[i].checked) stage3++;
+    }
+
+    var color1 = stage1 === 7 ? '#1a1a2e' : '#ccc';
+    var color2 = stage2 === 4 ? '#1a1a2e' : '#ccc';
+    var color3 = stage3 === 3 ? '#1a1a2e' : '#ccc';
     var color4 = c.businessName ? '#1a1a2e' : '#ccc';
     var color5 = (c.tools && c.tools.length > 0) ? '#1a1a2e' : '#ccc';
     var color6 = (c.tasks && c.tasks.length > 0) ? '#1a1a2e' : '#ccc';
@@ -510,9 +584,9 @@ function updateTracker() {
     var color8 = c.keyContacts ? '#1a1a2e' : '#ccc';
     var color9 = c.expectations ? '#1a1a2e' : '#ccc';
 
-    var completed = (stage1 === 7 && name === currentClient ? 1 : 0) +
-                    (stage2 === 4 && name === currentClient ? 1 : 0) +
-                    (stage3 === 3 && name === currentClient ? 1 : 0) +
+    var completed = (stage1 === 7 ? 1 : 0) +
+                    (stage2 === 4 ? 1 : 0) +
+                    (stage3 === 3 ? 1 : 0) +
                     (c.businessName ? 1 : 0) +
                     (c.tools && c.tools.length > 0 ? 1 : 0) +
                     (c.tasks && c.tasks.length > 0 ? 1 : 0) +
@@ -523,7 +597,61 @@ function updateTracker() {
 
     var row = document.createElement('tr');
     row.style.borderBottom = '1px solid #f0f0f0';
-    row.innerHTML = '<td style="padding: 8px; text-align: right; border-right: 1px solid #ddd; font-weight: 500;">' + name + '</td>' +
+    row.style.background = name === currentClient ? '#f5f4f1' : '#fff';
+    row.innerHTML = '<td style="padding: 8px; text-align: right; border-right: 1px solid #ddd; font-weight: 500;">' + name + (name === currentClient ? ' (עכשיו)' : '') + '</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color1 + '; font-weight: bold;">✓</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color2 + '; font-weight: bold;">✓</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color3 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color4 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color5 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color6 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color7 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color8 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color9 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">' + c.hours + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">₪' + c.cost + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; font-weight: bold; color: ' + (progress >= 66 ? '#e8b86d' : '#999') + ';">' + progress + '%</td>';
+    tbody.appendChild(row);
+    totalRevenue += c.cost;
+  }
+
+  document.getElementById('summary-count').textContent = 'לקוחות פעילים: ' + Object.keys(clients).length;
+  document.getElementById('summary-revenue').textContent = 'הכנסה: ₪' + totalRevenue;
+}
+
+function initPage() {
+  populateClientSelect();
+
+  var obSelect = document.getElementById('onboarding-client-select');
+  if (obSelect) {
+    obSelect.addEventListener('change', function() {
+      if (this.value) {
+        setCurrentClient(this.value);
+        loadCheckboxes();
+        updateTracker();
+      }
+    });
+  }
+
+  var select = document.getElementById('client-select');
+  if (select) {
+    select.addEventListener('change', function() {
+      if (this.value) loadClientToForm(this.value);
+    });
+  }
+
+  loadCheckboxes();
+  updateTracker();
+  var d = new Date();
+  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPage);
+} else {
+  initPage();
+}
+</script>
+
+</body>
+</html>
