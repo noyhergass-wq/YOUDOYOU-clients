@@ -8,25 +8,20 @@
 :root { color-scheme: light; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #f5f4f1; color: #1a1a1a; direction: rtl; font-size: 14px; }
-
 .header { background: #1a1a2e; padding: 28px 28px 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .logo { color: #e8b86d; font-size: 28px; font-weight: 700; letter-spacing: 2px; }
 .logo span { display: block; color: rgba(255,255,255,0.65); font-weight: 300; font-size: 14px; margin-top: 5px; letter-spacing: 0.5px; }
 .header-date { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 6px; }
-
 .tabs { background: #fff; border-bottom: 1px solid #eaeaea; padding: 0 24px; display: flex; }
 .tab-btn { padding: 13px 20px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: #888; border-bottom: 2px solid transparent; transition: all 0.15s; }
 .tab-btn.active { color: #1a1a2e; border-bottom-color: #e8b86d; }
 .tab-btn:hover:not(.active) { color: #444; }
-
 .content { padding: 24px 28px; max-width: 920px; margin: 0 auto; }
 .tab-pane { display: none; }
 .tab-pane.active { display: block; }
-
 .card { background: #fff; border-radius: 12px; border: 0.5px solid #e5e5e5; padding: 20px 24px; margin-bottom: 16px; }
 .step-title { font-size: 13px; font-weight: 600; color: #1a1a2e; background: #f8f7f4; border-radius: 8px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
 .step-tag { font-size: 11px; font-weight: 400; color: #9a7030; background: #e8b86d22; padding: 2px 8px; border-radius: 20px; }
-
 .checklist { list-style: none; }
 .checklist li { padding: 9px 4px; border-bottom: 0.5px solid #f2f2f2; display: flex; align-items: flex-start; gap: 10px; }
 .checklist li:last-child { border-bottom: none; }
@@ -34,38 +29,22 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 .checklist input[type=checkbox] { margin-top: 1px; width: 15px; height: 15px; cursor: pointer; accent-color: #1a1a2e; flex-shrink: 0; }
 .checklist label { font-size: 13.5px; color: #333; cursor: pointer; line-height: 1.5; }
 .checklist input:checked + label { text-decoration: line-through; color: #bbb; }
-
 .progress-wrap { margin-bottom: 20px; }
 .progress-bar { height: 5px; background: #eee; border-radius: 3px; overflow: hidden; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, #e8b86d, #c89040); border-radius: 3px; transition: width 0.3s ease; }
 .progress-info { font-size: 12px; color: #999; margin-bottom: 7px; display: flex; justify-content: space-between; }
-
 .client-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
 .client-row label { font-size: 13px; color: #777; white-space: nowrap; }
 .client-name-input { flex: 1; border: 0.5px solid #ddd; border-radius: 8px; padding: 8px 12px; font-size: 14px; direction: rtl; background: #fff; color: #1a1a1a; }
 .client-name-input:focus { outline: none; border-color: #e8b86d; }
-
 .sec-heading { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid #ebebeb; }
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .field-item { display: flex; flex-direction: column; gap: 5px; }
 .field-item.full { grid-column: 1 / -1; }
 .field-item label { font-size: 11.5px; color: #999; }
-.field-item input, .field-item textarea, .field-item select {
-  border: 0.5px solid #e0e0e0; border-radius: 8px; padding: 8px 10px;
-  font-size: 13.5px; direction: rtl; color: #1a1a1a; background: #fff;
-  font-family: inherit;
-}
+.field-item input, .field-item textarea, .field-item select { border: 0.5px solid #e0e0e0; border-radius: 8px; padding: 8px 10px; font-size: 13.5px; direction: rtl; color: #1a1a1a; background: #fff; font-family: inherit; }
 .field-item textarea { height: 80px; resize: vertical; }
 .field-item input:focus, .field-item textarea:focus, .field-item select:focus { outline: none; border-color: #e8b86d; }
-
-.btn { padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.15s; }
-.btn-primary { background: #1a1a2e; color: #fff; }
-.btn-primary:hover { background: #2a2a3e; }
-.btn-secondary { background: #f0f0f0; color: #1a1a2e; }
-.btn-secondary:hover { background: #e0e0e0; }
-
-.btn-group { display: flex; gap: 8px; margin-top: 16px; }
-
 .tracker-wrap { overflow-x: auto; }
 .tracker-table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 640px; }
 .tracker-table th { text-align: right; padding: 10px 14px; font-size: 11.5px; font-weight: 600; color: #aaa; border-bottom: 1px solid #eee; background: #fafafa; white-space: nowrap; }
@@ -78,7 +57,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 .s-active { background: #d4edda; color: #155724; }
 .s-onboarding { background: #cce5ff; color: #004085; }
 .s-paused { background: #f8d7da; color: #721c24; }
-
 .summary-row { display: flex; gap: 16px; margin-bottom: 20px; }
 .summary-card { flex: 1; background: #fff; border: 0.5px solid #e5e5e5; border-radius: 10px; padding: 14px 18px; }
 .summary-card .sc-label { font-size: 11.5px; color: #aaa; margin-bottom: 4px; }
@@ -93,9 +71,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 </div>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('onboarding',this)">אונבורדינג</button>
-  <button class="tab-btn" onclick="switchTab('card',this)">כרטיס לקוח</button>
-  <button class="tab-btn" onclick="switchTab('tracker',this)">טרקר לקוחות</button>
+  <button class="tab-btn active" data-tab="onboarding">אונבורדינג</button>
+  <button class="tab-btn" data-tab="card">כרטיס לקוח</button>
+  <button class="tab-btn" data-tab="tracker">טרקר לקוחות</button>
 </div>
 
 <div class="content">
@@ -114,32 +92,32 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
   <div class="card">
     <div class="step-title">שלב 1 — סגירה עסקית <span class="step-tag">מיד אחרי שיחת המכירה</span></div>
     <ul class="checklist">
-      <li><input type="checkbox" id="c1" onchange="prog()"><label for="c1">קבלת תשלום ראשון באשראי טלפוני</label></li>
-      <li><input type="checkbox" id="c2" onchange="prog()"><label for="c2">שליחת הסכם לחתימה דיגיטלית</label></li>
-      <li><input type="checkbox" id="c3" onchange="prog()"><label for="c3">קבלת הסכם חתום</label></li>
-      <li><input type="checkbox" id="c4" onchange="prog()"><label for="c4">הגדרת הוראת קבע (הו"ק)</label></li>
-      <li><input type="checkbox" id="c5" onchange="prog()"><label for="c5">תיאום שיחת האפיון (45–60 דקות) — נקבע בשיחת המכירה</label></li>
-      <li><input type="checkbox" id="c6" onchange="prog()"><label for="c6">שמירת ההסכם החתום בתיקיית ההסכמים בדרייב</label></li>
-      <li class="opt"><input type="checkbox" id="c7" onchange="prog()"><label for="c7">שליחת הודעת ברוכים הבאים (אופציונלי)</label></li>
+      <li><input type="checkbox" id="c1" class="chk" onchange="updateProgress()"><label for="c1">קבלת תשלום ראשון באשראי טלפוני</label></li>
+      <li><input type="checkbox" id="c2" class="chk" onchange="updateProgress()"><label for="c2">שליחת הסכם לחתימה דיגיטלית</label></li>
+      <li><input type="checkbox" id="c3" class="chk" onchange="updateProgress()"><label for="c3">קבלת הסכם חתום</label></li>
+      <li><input type="checkbox" id="c4" class="chk" onchange="updateProgress()"><label for="c4">הגדרת הוראת קבע (הו"ק)</label></li>
+      <li><input type="checkbox" id="c5" class="chk" onchange="updateProgress()"><label for="c5">תיאום שיחת האפיון (45–60 דקות) — נקבע בשיחת המכירה</label></li>
+      <li><input type="checkbox" id="c6" class="chk" onchange="updateProgress()"><label for="c6">שמירת ההסכם החתום בתיקיית ההסכמים בדרייב</label></li>
+      <li class="opt"><input type="checkbox" id="c7" class="chk" onchange="updateProgress()"><label for="c7">שליחת הודעת ברוכים הבאים (אופציונלי)</label></li>
     </ul>
   </div>
 
   <div class="card">
     <div class="step-title">שלב 2 — שיחת האפיון <span class="step-tag">45–60 דקות</span></div>
     <ul class="checklist">
-      <li><input type="checkbox" id="c8" onchange="prog()"><label for="c8">מילוי כרטיס לקוח במהלך השיחה</label></li>
-      <li><input type="checkbox" id="c9" onchange="prog()"><label for="c9">קבלת רשימת אנשי קשר קבועים (רו"ח, עו"ד, לקוחות/ספקים)</label></li>
-      <li><input type="checkbox" id="c10" onchange="prog()"><label for="c10">קבלת גישה ליומן גוגל</label></li>
-      <li><input type="checkbox" id="c11" onchange="prog()"><label for="c11">קבלת גישה לחשבונית ירוקה / כלי חשבוניות</label></li>
+      <li><input type="checkbox" id="c8" class="chk" onchange="updateProgress()"><label for="c8">מילוי כרטיס לקוח במהלך השיחה</label></li>
+      <li><input type="checkbox" id="c9" class="chk" onchange="updateProgress()"><label for="c9">קבלת רשימת אנשי קשר קבועים (רו"ח, עו"ד, לקוחות/ספקים)</label></li>
+      <li><input type="checkbox" id="c10" class="chk" onchange="updateProgress()"><label for="c10">קבלת גישה ליומן גוגל</label></li>
+      <li><input type="checkbox" id="c11" class="chk" onchange="updateProgress()"><label for="c11">קבלת גישה לחשבונית ירוקה / כלי חשבוניות</label></li>
     </ul>
   </div>
 
   <div class="card">
     <div class="step-title">שלב 3 — הקמה ומעבר לשוטף</div>
     <ul class="checklist">
-      <li><input type="checkbox" id="c12" onchange="prog()"><label for="c12">הוספת הלקוח לטרקר הלקוחות</label></li>
-      <li><input type="checkbox" id="c13" onchange="prog()"><label for="c13">הגדרת תזכורת גבייה לא' לחודש</label></li>
-      <li class="opt"><input type="checkbox" id="c14" onchange="prog()"><label for="c14">שיחת צ'ק-אין קצרה אחרי שבוע ראשון (אופציונלי)</label></li>
+      <li><input type="checkbox" id="c12" class="chk" onchange="updateProgress()"><label for="c12">הוספת הלקוח לטרקר הלקוחות</label></li>
+      <li><input type="checkbox" id="c13" class="chk" onchange="updateProgress()"><label for="c13">הגדרת תזכורת גבייה לא' לחודש</label></li>
+      <li class="opt"><input type="checkbox" id="c14" class="chk" onchange="updateProgress()"><label for="c14">שיחת צ'ק-אין קצרה אחרי שבוע ראשון (אופציונלי)</label></li>
     </ul>
   </div>
 </div>
@@ -148,84 +126,77 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 <div class="tab-pane" id="tab-card">
   <div class="card">
     <div class="sec-heading">בחר לקוח</div>
-    <div class="field-grid">
-      <div class="field-item full"><label></label>
-        <select id="client-select" onchange="loadClient()" style="width:100%;padding:8px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:14px;direction:rtl;">
-          <option value="">-- בחר לקוח --</option>
-          <option value="new">+ לקוח חדש</option>
-        </select>
-      </div>
-    </div>
+    <select id="client-select" onchange="loadSelectedClient()" style="width:100%;padding:8px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:14px;direction:rtl;">
+      <option value="">-- בחר לקוח --</option>
+      <option value="0">נובו נדל"ן</option>
+    </select>
   </div>
 
-  <div id="client-details">
+  <div id="client-details" style="display:none;">
   <div class="card">
     <div class="sec-heading">פרטים בסיסיים</div>
     <div class="field-grid">
-      <div class="field-item"><label>שם הלקוח / שם העסק</label><input type="text" id="f-name" placeholder=""></div>
-      <div class="field-item"><label>אתר</label><input type="text" id="f-website" placeholder=""></div>
-      <div class="field-item full"><label>תחום עיסוק</label><input type="text" id="f-field" placeholder=""></div>
-      <div class="field-item"><label>תאריך תחילת עבודה</label><input type="date" id="f-start"></div>
-      <div class="field-item"><label>חבילה</label><input type="text" id="f-package" placeholder=""></div>
-      <div class="field-item"><label>סכום חודשי</label><input type="text" id="f-amount" placeholder="₪"></div>
-      <div class="field-item full"><label>תשלום</label><input type="text" id="f-payment" placeholder=""></div>
+      <div class="field-item"><label>שם הלקוח / שם העסק</label><input type="text" id="f-name" value="נובו נדל"ן"></div>
+      <div class="field-item"><label>אתר</label><input type="text" id="f-website" value="noovo.co.il"></div>
+      <div class="field-item full"><label>תחום עיסוק</label><input type="text" id="f-field" value="ניהול וקידום הליכי תכנון — מלווה יזמים ובעלי קרקעות משלב החזון ועד מימוש"></div>
+      <div class="field-item"><label>תאריך תחילת עבודה</label><input type="date" id="f-start" value="2024-06-01"></div>
+      <div class="field-item"><label>חבילה</label><input type="text" id="f-package" value="בינונית — 25 שעות/חודש"></div>
+      <div class="field-item"><label>סכום חודשי</label><input type="text" id="f-amount" value="4700"></div>
+      <div class="field-item full"><label>תשלום</label><input type="text" id="f-payment" value="הו"ק ב-1 לחודש"></div>
     </div>
 
     <div class="sec-heading">אנשי קשר</div>
     <div class="field-grid">
-      <div class="field-item"><label>שם — איש קשר 1</label><input type="text" id="f-c1-name" placeholder=""></div>
-      <div class="field-item"><label>תפקיד</label><input type="text" id="f-c1-role" placeholder=""></div>
-      <div class="field-item"><label>טלפון</label><input type="tel" id="f-c1-phone" placeholder=""></div>
-      <div class="field-item"><label>מייל</label><input type="email" id="f-c1-email" placeholder=""></div>
-      <div class="field-item"><label>מייל נוסף</label><input type="email" id="f-c1-email2" placeholder=""></div>
-      <div class="field-item"><label>שעות זמינות</label><input type="text" id="f-c1-hours" placeholder=""></div>
-      <div class="field-item full"><label>אתר עצמאי</label><input type="text" id="f-c1-site" placeholder=""></div>
+      <div class="field-item"><label>שם — איש קשר 1</label><input type="text" id="f-c1-name" value="אירית ליברמן — שותפה מנהלת"></div>
+      <div class="field-item"><label>תפקיד</label><input type="text" id="f-c1-role" value="כלכלנית ושמאית מקרקעין"></div>
+      <div class="field-item"><label>טלפון</label><input type="tel" id="f-c1-phone" value="053-250-2992"></div>
+      <div class="field-item"><label>מייל</label><input type="email" id="f-c1-email" value="irit@noovo.co.il"></div>
+      <div class="field-item"><label>מייל נוסף</label><input type="email" id="f-c1-email2" value="IritLiberman.re@gmail.com"></div>
+      <div class="field-item"><label>שעות זמינות</label><input type="text" id="f-c1-hours" value="8:00–17:00"></div>
+      <div class="field-item full"><label>אתר עצמאי</label><input type="text" id="f-c1-site" value="iritliberman.co.il"></div>
     </div>
     <div class="field-grid" style="margin-top:12px">
-      <div class="field-item"><label>שם — איש קשר 2</label><input type="text" id="f-c2-name" placeholder=""></div>
-      <div class="field-item"><label>תפקיד</label><input type="text" id="f-c2-role" placeholder=""></div>
-      <div class="field-item"><label>טלפון</label><input type="tel" id="f-c2-phone" placeholder=""></div>
-      <div class="field-item"><label>מייל</label><input type="email" id="f-c2-email" placeholder=""></div>
+      <div class="field-item"><label>שם — איש קשר 2</label><input type="text" id="f-c2-name" value="אפרת פרנקו — מנכ"לית ושותפה מנהלת"></div>
+      <div class="field-item"><label>תפקיד</label><input type="text" id="f-c2-role" value="עו"ד, מעל 20 שנות ניסיון בנדל"ן"></div>
+      <div class="field-item"><label>טלפון</label><input type="tel" id="f-c2-phone" value="050-4585425"></div>
+      <div class="field-item"><label>מייל</label><input type="email" id="f-c2-email" value="efrat@noovo.co.il"></div>
     </div>
 
     <div class="sec-heading">כלי עבודה</div>
     <div class="field-grid">
-      <div class="field-item"><label>יומן</label><input type="text" id="f-calendar" placeholder=""></div>
-      <div class="field-item"><label>כלי חשבוניות</label><input type="text" id="f-invoices" placeholder=""></div>
-      <div class="field-item"><label>זום — יש מנוי?</label><input type="text" id="f-zoom" placeholder=""></div>
-      <div class="field-item"><label>כלים נוספים</label><input type="text" id="f-tools" placeholder=""></div>
+      <div class="field-item"><label>יומן</label><input type="text" id="f-calendar" value="גוגל קלנדר"></div>
+      <div class="field-item"><label>כלי חשבוניות</label><input type="text" id="f-invoices" value="חשבונית ירוקה"></div>
+      <div class="field-item"><label>זום</label><input type="text" id="f-zoom" value=""></div>
+      <div class="field-item"><label>כלים נוספים</label><input type="text" id="f-tools" value=""></div>
     </div>
 
     <div class="sec-heading">משימות שוטפות</div>
     <div class="field-grid">
-      <div class="field-item full"><label></label><textarea id="f-tasks" placeholder=""></textarea></div>
+      <div class="field-item full"><label></label><textarea id="f-tasks">• כתיבת סיכומי פגישות + תיקון + הפצה
+• מיילים שוטפים
+• זימון פגישות ביומן</textarea></div>
     </div>
 
     <div class="sec-heading">פרויקטים</div>
     <div class="field-grid">
-      <div class="field-item full"><label></label><input type="text" id="f-projects" placeholder=""></div>
+      <div class="field-item full"><label></label><input type="text" id="f-projects" value="דפנה, התעשיה, רעננה, קרליבך, צור יגאל, פרישמן, חיסין"></div>
     </div>
 
     <div class="sec-heading">יועצים וגורמים חיצוניים</div>
     <div class="field-grid">
-      <div class="field-item full"><label></label><input type="text" id="f-consultants" placeholder=""></div>
+      <div class="field-item full"><label></label><input type="text" id="f-consultants" value="בי-פיור, מדאוס, ריי טי אל וי, מנרב, חברת חשמל"></div>
     </div>
 
     <div class="sec-heading">גישות ומערכות</div>
     <div class="field-grid">
-      <div class="field-item"><label>גישה ליומן גוגל — מייל</label><input type="email" id="f-calendar-access" placeholder=""></div>
-      <div class="field-item"><label>גישה לחשבונית ירוקה</label><input type="text" id="f-invoices-access" placeholder=""></div>
-      <div class="field-item full"><label>אחר</label><input type="text" id="f-other-access" placeholder=""></div>
+      <div class="field-item"><label>גישה ליומן גוגל — מייל</label><input type="email" id="f-calendar-access"></div>
+      <div class="field-item"><label>גישה לחשבונית ירוקה</label><input type="text" id="f-invoices-access"></div>
+      <div class="field-item full"><label>אחר</label><input type="text" id="f-other-access"></div>
     </div>
 
     <div class="sec-heading">⚠️ הערות חשובות</div>
     <div class="field-grid">
-      <div class="field-item full"><label></label><textarea id="f-notes" placeholder=""></textarea></div>
-    </div>
-
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="saveClient()">💾 שמור</button>
-      <button class="btn btn-secondary" onclick="closeClient()">❌ בטל</button>
+      <div class="field-item full"><label></label><textarea id="f-notes">לאירית פרויקטים מרובים עם אנשי מקצוע שונים לכל אחד. אסור לבלבל בין הפרויקטים.</textarea></div>
     </div>
   </div>
   </div>
@@ -234,9 +205,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 <!-- TAB: TRACKER -->
 <div class="tab-pane" id="tab-tracker">
   <div class="summary-row">
-    <div class="summary-card"><div class="sc-label">לקוחות פעילים</div><div class="sc-value" id="cnt-active">0</div></div>
-    <div class="summary-card"><div class="sc-label">הכנסה חודשית</div><div class="sc-value" id="cnt-income">₪0</div></div>
-    <div class="summary-card"><div class="sc-label">סה"כ לקוחות</div><div class="sc-value" id="cnt-total">0</div></div>
+    <div class="summary-card"><div class="sc-label">לקוחות פעילים</div><div class="sc-value" id="cnt-active">1</div></div>
+    <div class="summary-card"><div class="sc-label">הכנסה חודשית</div><div class="sc-value" id="cnt-income">₪4,700</div></div>
+    <div class="summary-card"><div class="sc-label">סה"כ לקוחות</div><div class="sc-value" id="cnt-total">1</div></div>
   </div>
   <div class="card">
     <div class="tracker-wrap">
@@ -248,10 +219,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
             <th>סכום</th>
             <th>התחלה</th>
             <th>סטטוס</th>
-            <th>הערות</th>
           </tr>
         </thead>
-        <tbody id="tbody"></tbody>
+        <tbody id="tbody">
+          <tr>
+            <td><div class="client-name-cell">נובו נדל"ן</div><div class="client-sub-cell">אירית ליברמן + אפרת פרנקו</div></td>
+            <td>בינונית — 25 שעות</td>
+            <td>₪4,700</td>
+            <td>06/2024</td>
+            <td><span class="sbadge s-active">פעיל</span></td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
@@ -260,102 +238,41 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 </div>
 
 <script>
-var CLIENTS = [];
-var currentClientIdx = null;
-
-function loadFromStorage() {
-  var stored = localStorage.getItem('YOU_DO_YOU_CLIENTS');
-  if (stored) {
-    try {
-      CLIENTS = JSON.parse(stored);
-    } catch(e) {
-      CLIENTS = [];
-    }
-  }
-}
-
-function saveToStorage() {
-  localStorage.setItem('YOU_DO_YOU_CLIENTS', JSON.stringify(CLIENTS));
-  renderTracker();
-  populateClientSelect();
-}
-
-function populateClientSelect() {
-  var select = document.getElementById('client-select');
-  var oldVal = select.value;
-  select.innerHTML = '<option value="">-- בחר לקוח --</option><option value="new">+ לקוח חדש</option>';
-  CLIENTS.forEach(function(c, i) {
-    var opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = (c.sub || c.name);
-    select.appendChild(opt);
+// Event listeners for tab switching
+document.querySelectorAll('.tab-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var tabName = this.getAttribute('data-tab');
+    switchTab(tabName);
   });
-  select.value = oldVal;
+});
+
+function switchTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-pane').forEach(function(el) {
+    el.classList.remove('active');
+  });
+
+  // Remove active from all buttons
+  document.querySelectorAll('.tab-btn').forEach(function(el) {
+    el.classList.remove('active');
+  });
+
+  // Show selected tab
+  document.getElementById('tab-' + tabName).classList.add('active');
+
+  // Add active to clicked button
+  document.querySelector('[data-tab="' + tabName + '"]').classList.add('active');
 }
 
-function loadClient() {
+function updateProgress() {
+  var all = document.querySelectorAll('#tab-onboarding .chk');
+  var done = 0;
+  all.forEach(function(c) { if(c.checked) done++; });
+  var pct = Math.round(done/all.length*100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = done + ' / ' + all.length + ' סעיפים';
+  document.getElementById('prog-pct').textContent = pct + '%';
+}
+
+function loadSelectedClient() {
   var select = document.getElementById('client-select');
-  var idx = select.value;
-  var details = document.getElementById('client-details');
-
-  if (idx === '') {
-    details.style.display = 'none';
-    currentClientIdx = null;
-  } else if (idx === 'new') {
-    clearForm();
-    details.style.display = 'block';
-    currentClientIdx = 'new';
-    select.value = '';
-  } else {
-    var c = CLIENTS[parseInt(idx)];
-    loadForm(c);
-    details.style.display = 'block';
-    currentClientIdx = parseInt(idx);
-  }
-}
-
-function clearForm() {
-  document.getElementById('f-name').value = '';
-  document.getElementById('f-website').value = '';
-  document.getElementById('f-field').value = '';
-  document.getElementById('f-start').value = '';
-  document.getElementById('f-package').value = '';
-  document.getElementById('f-amount').value = '';
-  document.getElementById('f-payment').value = '';
-  document.getElementById('f-c1-name').value = '';
-  document.getElementById('f-c1-role').value = '';
-  document.getElementById('f-c1-phone').value = '';
-  document.getElementById('f-c1-email').value = '';
-  document.getElementById('f-c1-email2').value = '';
-  document.getElementById('f-c1-hours').value = '';
-  document.getElementById('f-c1-site').value = '';
-  document.getElementById('f-c2-name').value = '';
-  document.getElementById('f-c2-role').value = '';
-  document.getElementById('f-c2-phone').value = '';
-  document.getElementById('f-c2-email').value = '';
-  document.getElementById('f-calendar').value = '';
-  document.getElementById('f-invoices').value = '';
-  document.getElementById('f-zoom').value = '';
-  document.getElementById('f-tools').value = '';
-  document.getElementById('f-tasks').value = '';
-  document.getElementById('f-projects').value = '';
-  document.getElementById('f-consultants').value = '';
-  document.getElementById('f-calendar-access').value = '';
-  document.getElementById('f-invoices-access').value = '';
-  document.getElementById('f-other-access').value = '';
-  document.getElementById('f-notes').value = '';
-}
-
-function loadForm(c) {
-  document.getElementById('f-name').value = c.name || '';
-  document.getElementById('f-website').value = c.website || '';
-  document.getElementById('f-field').value = c.field || '';
-  document.getElementById('f-start').value = c.start || '';
-  document.getElementById('f-package').value = c.pkg || '';
-  document.getElementById('f-amount').value = c.amt || '';
-  document.getElementById('f-payment').value = c.payment || '';
-  document.getElementById('f-c1-name').value = c.c1_name || '';
-  document.getElementById('f-c1-role').value = c.c1_role || '';
-  document.getElementById('f-c1-phone').value = c.c1_phone || '';
-  document.getElementById('f-c1-email').value = c.c1_email || '';
-  document.getElementById('f-c1-email2').value = c.c1_email2 
