@@ -621,9 +621,17 @@ function updateTracker() {
 
 function initPage() {
   populateClientSelect();
+  loadCheckboxes();
+  updateTracker();
 
+  var d = new Date();
+  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
+}
+
+function setupEventListeners() {
   var obSelect = document.getElementById('onboarding-client-select');
-  if (obSelect) {
+  if (obSelect && !obSelect._listenerAttached) {
+    obSelect._listenerAttached = true;
     obSelect.addEventListener('change', function() {
       if (this.value) {
         setCurrentClient(this.value);
@@ -634,23 +642,7 @@ function initPage() {
   }
 
   var select = document.getElementById('client-select');
-  if (select) {
+  if (select && !select._listenerAttached) {
+    select._listenerAttached = true;
     select.addEventListener('change', function() {
-      if (this.value) loadClientToForm(this.value);
-    });
-  }
-
-  loadCheckboxes();
-  updateTracker();
-  var d = new Date();
-  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPage);
-} else {
-  initPage();
-}
-</script>
-
-<
+      if (this.value) loadClientT
