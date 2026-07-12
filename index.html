@@ -234,12 +234,27 @@
 <div class="tab" id="tracker">
   <div class="card">
     <div class="card-title">סיכום</div>
-    <p>לקוחות פעילים: 1</p>
-    <p>הכנסה: 4,700 ש"ח</p>
+    <p id="summary-count">לקוחות פעילים: 0</p>
+    <p id="summary-revenue">הכנסה: ₪0</p>
   </div>
-  <div class="card">
-    <div class="card-title">לקוחות</div>
-    <p>נובו נדל"ן - 25 שעות - פעיל</p>
+  <div class="card" style="overflow-x: auto;">
+    <div class="card-title">טרקר לקוחות</div>
+    <table id="tracker-table" style="width: 100%; border-collapse: collapse; font-size: 12px;">
+      <thead>
+        <tr style="background: #f9f8f6; border-bottom: 2px solid #ddd;">
+          <th style="padding: 10px; text-align: right; border-right: 1px solid #ddd;">שם לקוח</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">השרוי</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">סגירה עסקית</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">שיחת אפיון</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">הקמה</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">שעות</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 60px;">עלות</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">התקדמות</th>
+        </tr>
+      </thead>
+      <tbody id="tracker-tbody">
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -269,6 +284,7 @@ function updateProgress() {
   document.getElementById('prog-text').textContent = done + ' / ' + all.length;
   document.getElementById('prog-text-top').textContent = done + ' / ' + all.length;
   saveCheckboxes();
+  updateTracker();
 }
 
 function saveCheckboxes() {
@@ -446,37 +462,4 @@ function showPreview(clientName) {
                'תחום: ' + c.businessField + ' | ' + c.businessDuration + '</p>' +
                '<p style="margin: 8px 0; font-size: 12px;">📧 ' + c.email + '</p>' +
                '<p style="margin: 8px 0; font-size: 12px;">💼 ' + c.hours + ' שעות | ₪' + c.cost + '</p>' +
-               '<p style="margin: 8px 0; font-size: 12px;"><strong>משימות:</strong> ' + (c.tasks || []).join(', ') + '</p>' +
-               '<p style="margin: 8px 0; font-size: 12px;"><strong>כלים:</strong> ' + (c.tools || []).join(', ') + '</p>' +
-               '<p style="margin: 8px 0; font-size: 12px;"><strong>תקשורת:</strong> ' + c.commMethod + ' | ' + c.workHours + '</p>';
-    if (c.keyContacts) {
-      html += '<p style="margin: 8px 0; font-size: 12px;"><strong>אנשי קשר:</strong><br>' +
-              c.keyContacts.split('\n').filter(function(x){return x.trim();}).join('<br>') + '</p>';
-    }
-    document.getElementById('preview-content').innerHTML = html;
-    document.getElementById('client-preview').style.display = 'block';
-  }
-}
-
-function initPage() {
-  loadCheckboxes();
-  populateClientSelect();
-  var select = document.getElementById('client-select');
-  if (select) {
-    select.addEventListener('change', function() {
-      if (this.value) loadClientToForm(this.value);
-    });
-  }
-  var d = new Date();
-  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPage);
-} else {
-  initPage();
-}
-</script>
-
-</body>
-</html>
+               '<p style="margin: 8px 0; font-size: 1
