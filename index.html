@@ -58,6 +58,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 .field-item textarea { height: 80px; resize: vertical; }
 .field-item input:focus, .field-item textarea:focus, .field-item select:focus { outline: none; border-color: #e8b86d; }
 
+.btn { padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.15s; }
+.btn-primary { background: #1a1a2e; color: #fff; }
+.btn-primary:hover { background: #2a2a3e; }
+.btn-secondary { background: #f0f0f0; color: #1a1a2e; }
+.btn-secondary:hover { background: #e0e0e0; }
+
+.btn-group { display: flex; gap: 8px; margin-top: 16px; }
+
 .tracker-wrap { overflow-x: auto; }
 .tracker-table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 640px; }
 .tracker-table th { text-align: right; padding: 10px 14px; font-size: 11.5px; font-weight: 600; color: #aaa; border-bottom: 1px solid #eee; background: #fafafa; white-space: nowrap; }
@@ -144,82 +152,80 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
       <div class="field-item full"><label></label>
         <select id="client-select" onchange="loadClient()" style="width:100%;padding:8px;border:0.5px solid #e0e0e0;border-radius:8px;font-size:14px;direction:rtl;">
           <option value="">-- בחר לקוח --</option>
+          <option value="new">+ לקוח חדש</option>
         </select>
       </div>
     </div>
   </div>
 
-  <div id="client-details" style="display:none;">
+  <div id="client-details">
   <div class="card">
     <div class="sec-heading">פרטים בסיסיים</div>
     <div class="field-grid">
-      <div class="field-item"><label>שם הלקוח / שם העסק</label><input type="text" value="נובו נדל"ן"></div>
-      <div class="field-item"><label>אתר</label><input type="text" value="noovo.co.il"></div>
-      <div class="field-item full"><label>תחום עיסוק</label><input type="text" value="ניהול וקידום הליכי תכנון — מלווה יזמים ובעלי קרקעות משלב החזון ועד מימוש. עבודה מול רשויות מקומיות לאישור תכניות בניין עיר והיתרים."></div>
-      <div class="field-item"><label>תאריך תחילת עבודה</label><input type="date" value="2024-06-01"></div>
-      <div class="field-item"><label>חבילה</label><input type="text" value="בינונית — 25 שעות/חודש"></div>
-      <div class="field-item"><label>סכום חודשי</label><input type="text" value="₪4,700"></div>
-      <div class="field-item full"><label>תשלום</label><input type="text" value="מגיע מנובו (לא מאירית באופן אישי) — הו"ק ב-1 לחודש"></div>
+      <div class="field-item"><label>שם הלקוח / שם העסק</label><input type="text" id="f-name" placeholder=""></div>
+      <div class="field-item"><label>אתר</label><input type="text" id="f-website" placeholder=""></div>
+      <div class="field-item full"><label>תחום עיסוק</label><input type="text" id="f-field" placeholder=""></div>
+      <div class="field-item"><label>תאריך תחילת עבודה</label><input type="date" id="f-start"></div>
+      <div class="field-item"><label>חבילה</label><input type="text" id="f-package" placeholder=""></div>
+      <div class="field-item"><label>סכום חודשי</label><input type="text" id="f-amount" placeholder="₪"></div>
+      <div class="field-item full"><label>תשלום</label><input type="text" id="f-payment" placeholder=""></div>
     </div>
 
     <div class="sec-heading">אנשי קשר</div>
     <div class="field-grid">
-      <div class="field-item"><label>שם — איש קשר 1</label><input type="text" value="אירית ליברמן — שותפה מנהלת"></div>
-      <div class="field-item"><label>תפקיד</label><input type="text" value="כלכלנית ושמאית מקרקעין"></div>
-      <div class="field-item"><label>טלפון</label><input type="tel" value="053-250-2992"></div>
-      <div class="field-item"><label>מייל</label><input type="email" value="irit@noovo.co.il"></div>
-      <div class="field-item"><label>מייל נוסף</label><input type="email" value="IritLiberman.re@gmail.com"></div>
-      <div class="field-item"><label>שעות זמינות</label><input type="text" value="8:00–17:00"></div>
-      <div class="field-item full"><label>אתר עצמאי</label><input type="text" value="iritliberman.co.il — ייעוץ מקרקעין מוניציפלי, ייצוג יזמים מול רשויות מקומיות"></div>
+      <div class="field-item"><label>שם — איש קשר 1</label><input type="text" id="f-c1-name" placeholder=""></div>
+      <div class="field-item"><label>תפקיד</label><input type="text" id="f-c1-role" placeholder=""></div>
+      <div class="field-item"><label>טלפון</label><input type="tel" id="f-c1-phone" placeholder=""></div>
+      <div class="field-item"><label>מייל</label><input type="email" id="f-c1-email" placeholder=""></div>
+      <div class="field-item"><label>מייל נוסף</label><input type="email" id="f-c1-email2" placeholder=""></div>
+      <div class="field-item"><label>שעות זמינות</label><input type="text" id="f-c1-hours" placeholder=""></div>
+      <div class="field-item full"><label>אתר עצמאי</label><input type="text" id="f-c1-site" placeholder=""></div>
     </div>
     <div class="field-grid" style="margin-top:12px">
-      <div class="field-item"><label>שם — איש קשר 2</label><input type="text" value="אפרת פרנקו — מנכ"לית ושותפה מנהלת"></div>
-      <div class="field-item"><label>תפקיד</label><input type="text" value="עו"ד, מעל 20 שנות ניסיון בנדל"ן"></div>
-      <div class="field-item"><label>טלפון</label><input type="tel" value="050-4585425"></div>
-      <div class="field-item"><label>מייל</label><input type="email" value="efrat@noovo.co.il"></div>
+      <div class="field-item"><label>שם — איש קשר 2</label><input type="text" id="f-c2-name" placeholder=""></div>
+      <div class="field-item"><label>תפקיד</label><input type="text" id="f-c2-role" placeholder=""></div>
+      <div class="field-item"><label>טלפון</label><input type="tel" id="f-c2-phone" placeholder=""></div>
+      <div class="field-item"><label>מייל</label><input type="email" id="f-c2-email" placeholder=""></div>
     </div>
 
     <div class="sec-heading">כלי עבודה</div>
     <div class="field-grid">
-      <div class="field-item"><label>יומן</label><input type="text" value="גוגל קלנדר"></div>
-      <div class="field-item"><label>כלי חשבוניות</label><input type="text" value="חשבונית ירוקה"></div>
-      <div class="field-item"><label>זום — יש מנוי?</label><input type="text"></div>
-      <div class="field-item"><label>כלים נוספים</label><input type="text"></div>
+      <div class="field-item"><label>יומן</label><input type="text" id="f-calendar" placeholder=""></div>
+      <div class="field-item"><label>כלי חשבוניות</label><input type="text" id="f-invoices" placeholder=""></div>
+      <div class="field-item"><label>זום — יש מנוי?</label><input type="text" id="f-zoom" placeholder=""></div>
+      <div class="field-item"><label>כלים נוספים</label><input type="text" id="f-tools" placeholder=""></div>
     </div>
 
     <div class="sec-heading">משימות שוטפות</div>
     <div class="field-grid">
-      <div class="field-item full"><label></label><textarea>• כתיבת סיכומי פגישות + תיקון + הפצה
-• מיילים שוטפים
-• זימון פגישות ביומן
-• הצעות מחיר ליועצים + מעקב
-• הפקת חשבוניות (חשבונית ירוקה) + הפצה
-• בניית וניהול טבלאות לפי פרויקטים
-• מעקב סטטוס יועצים ותשלומים
-• שיחות מעקב + גבייה — פולואו אפ
-• רישום לכנסים</textarea></div>
+      <div class="field-item full"><label></label><textarea id="f-tasks" placeholder=""></textarea></div>
     </div>
 
-    <div class="sec-heading">פרויקטים של אירית</div>
+    <div class="sec-heading">פרויקטים</div>
     <div class="field-grid">
-      <div class="field-item full"><label></label><input type="text" value="דפנה, התעשיה, רעננה, קרליבך, צור יגאל, פרישמן, חיסין, שד החייל, הרצל, כרמי 46, הגפן 21, עלמה, הפקעה החרש והאומן"></div>
+      <div class="field-item full"><label></label><input type="text" id="f-projects" placeholder=""></div>
     </div>
 
     <div class="sec-heading">יועצים וגורמים חיצוניים</div>
     <div class="field-grid">
-      <div class="field-item full"><label></label><input type="text" value="בי-פיור, מדאוס, ריי טי אל וי, מנרב, חברת חשמל, יועצי אקוסטיקה וקרינה, שי (יועץ חשמל), חן תכנון, הלה, מרכז הספורט, מי אביבים"></div>
+      <div class="field-item full"><label></label><input type="text" id="f-consultants" placeholder=""></div>
     </div>
 
     <div class="sec-heading">גישות ומערכות</div>
     <div class="field-grid">
-      <div class="field-item"><label>גישה ליומן גוגל — מייל</label><input type="email"></div>
-      <div class="field-item"><label>גישה לחשבונית ירוקה</label><input type="text"></div>
-      <div class="field-item full"><label>אחר</label><input type="text"></div>
+      <div class="field-item"><label>גישה ליומן גוגל — מייל</label><input type="email" id="f-calendar-access" placeholder=""></div>
+      <div class="field-item"><label>גישה לחשבונית ירוקה</label><input type="text" id="f-invoices-access" placeholder=""></div>
+      <div class="field-item full"><label>אחר</label><input type="text" id="f-other-access" placeholder=""></div>
     </div>
 
     <div class="sec-heading">⚠️ הערות חשובות</div>
     <div class="field-grid">
-      <div class="field-item full"><label></label><textarea>לאירית פרויקטים מרובים עם אנשי מקצוע שונים לכל אחד. אסור לבלבל בין הפרויקטים — שליחת מסמך לאנשים הלא נכונים = נזק עסקי חמור.</textarea></div>
+      <div class="field-item full"><label></label><textarea id="f-notes" placeholder=""></textarea></div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="saveClient()">💾 שמור</button>
+      <button class="btn btn-secondary" onclick="closeClient()">❌ בטל</button>
     </div>
   </div>
   </div>
@@ -254,40 +260,102 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-s
 </div>
 
 <script>
-var CLIENTS = [
-  { name:'אירית ליברמן + אפרת פרנקו', sub:'נובו נדל"ן', pkg:'בינונית — 25 שעות', amt:4700, start:'06/2024', status:'active', notes:'⚠️ לא לבלבל בין פרויקטים' }
-];
+var CLIENTS = [];
+var currentClientIdx = null;
+
+function loadFromStorage() {
+  var stored = localStorage.getItem('YOU_DO_YOU_CLIENTS');
+  if (stored) {
+    try {
+      CLIENTS = JSON.parse(stored);
+    } catch(e) {
+      CLIENTS = [];
+    }
+  }
+}
+
+function saveToStorage() {
+  localStorage.setItem('YOU_DO_YOU_CLIENTS', JSON.stringify(CLIENTS));
+  renderTracker();
+  populateClientSelect();
+}
 
 function populateClientSelect() {
   var select = document.getElementById('client-select');
+  var oldVal = select.value;
+  select.innerHTML = '<option value="">-- בחר לקוח --</option><option value="new">+ לקוח חדש</option>';
   CLIENTS.forEach(function(c, i) {
     var opt = document.createElement('option');
     opt.value = i;
     opt.textContent = (c.sub || c.name);
     select.appendChild(opt);
   });
+  select.value = oldVal;
 }
 
 function loadClient() {
   var select = document.getElementById('client-select');
   var idx = select.value;
   var details = document.getElementById('client-details');
+
   if (idx === '') {
     details.style.display = 'none';
-  } else {
+    currentClientIdx = null;
+  } else if (idx === 'new') {
+    clearForm();
     details.style.display = 'block';
+    currentClientIdx = 'new';
+    select.value = '';
+  } else {
+    var c = CLIENTS[parseInt(idx)];
+    loadForm(c);
+    details.style.display = 'block';
+    currentClientIdx = parseInt(idx);
   }
 }
 
-function switchTab(id, btn) {
-  document.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-  document.getElementById('tab-' + id).classList.add('active');
-  btn.classList.add('active');
+function clearForm() {
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-website').value = '';
+  document.getElementById('f-field').value = '';
+  document.getElementById('f-start').value = '';
+  document.getElementById('f-package').value = '';
+  document.getElementById('f-amount').value = '';
+  document.getElementById('f-payment').value = '';
+  document.getElementById('f-c1-name').value = '';
+  document.getElementById('f-c1-role').value = '';
+  document.getElementById('f-c1-phone').value = '';
+  document.getElementById('f-c1-email').value = '';
+  document.getElementById('f-c1-email2').value = '';
+  document.getElementById('f-c1-hours').value = '';
+  document.getElementById('f-c1-site').value = '';
+  document.getElementById('f-c2-name').value = '';
+  document.getElementById('f-c2-role').value = '';
+  document.getElementById('f-c2-phone').value = '';
+  document.getElementById('f-c2-email').value = '';
+  document.getElementById('f-calendar').value = '';
+  document.getElementById('f-invoices').value = '';
+  document.getElementById('f-zoom').value = '';
+  document.getElementById('f-tools').value = '';
+  document.getElementById('f-tasks').value = '';
+  document.getElementById('f-projects').value = '';
+  document.getElementById('f-consultants').value = '';
+  document.getElementById('f-calendar-access').value = '';
+  document.getElementById('f-invoices-access').value = '';
+  document.getElementById('f-other-access').value = '';
+  document.getElementById('f-notes').value = '';
 }
 
-function prog() {
-  var all = document.querySelectorAll('#tab-onboarding input[type=checkbox]');
-  var done = 0;
-  all.forEach(function(c){ if(c.checked) done++; });
-  var pct = Math.round(do
+function loadForm(c) {
+  document.getElementById('f-name').value = c.name || '';
+  document.getElementById('f-website').value = c.website || '';
+  document.getElementById('f-field').value = c.field || '';
+  document.getElementById('f-start').value = c.start || '';
+  document.getElementById('f-package').value = c.pkg || '';
+  document.getElementById('f-amount').value = c.amt || '';
+  document.getElementById('f-payment').value = c.payment || '';
+  document.getElementById('f-c1-name').value = c.c1_name || '';
+  document.getElementById('f-c1-role').value = c.c1_role || '';
+  document.getElementById('f-c1-phone').value = c.c1_phone || '';
+  document.getElementById('f-c1-email').value = c.c1_email || '';
+  document.getElementById('f-c1-email2').value = c.c1_email2 
