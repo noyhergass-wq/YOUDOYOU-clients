@@ -15,7 +15,7 @@
     .tabs button { padding: 14px 18px; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; font-size: 13px; font-weight: 500; color: #888; transition: 0.2s; }
     .tabs button.active { color: #1a1a2e; border-bottom-color: #e8b86d; }
     .tabs button:hover { color: #555; }
-    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
     .tab { display: none; }
     .tab.active { display: block; }
     .card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 18px 20px; margin-bottom: 14px; }
@@ -104,11 +104,112 @@
   </div>
 
   <div class="card">
-    <div class="card-title">פרטי לקוח</div>
+    <div class="card-title">1️⃣ היכרות כללית</div>
     <div style="margin-bottom: 12px;">
-      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">שם לקוח</label>
-      <input type="text" id="client-name" placeholder="שם הלקוח" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">שם העסק</label>
+      <input type="text" id="business-name" placeholder="שם העסק" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
     </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">תחום עיסוק</label>
+      <input type="text" id="business-field" placeholder="תחום עיסוק" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">משך זמן פעילות</label>
+      <input type="text" id="business-duration" placeholder="לדוגמה: 5 שנים" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">תפקיד בעסק</label>
+      <input type="text" id="client-role" placeholder="מנהל/ת, בעלים, כו'" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">מספר עובדים</label>
+      <input type="number" id="employees-count" placeholder="0" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">מייל</label>
+      <input type="email" id="client-email" placeholder="example@email.com" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2️⃣ משימות וצרכים</div>
+    <label style="display: block; font-size: 12px; color: #666; margin-bottom: 8px;">אילו משימות?</label>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <label><input type="checkbox" class="task-checkbox" value="יומן"> ניהול יומן</label>
+      <label><input type="checkbox" class="task-checkbox" value="תיאומים"> תיאומים ופגישות</label>
+      <label><input type="checkbox" class="task-checkbox" value="מייל"> מענה למיילים</label>
+      <label><input type="checkbox" class="task-checkbox" value="מסמכים"> ניהול מסמכים</label>
+      <label><input type="checkbox" class="task-checkbox" value="גבייה"> גבייה ופולואו-אפ</label>
+      <label><input type="checkbox" class="task-checkbox" value="חשבוניות"> שליחת חשבוניות</label>
+      <label><input type="checkbox" class="task-checkbox" value="תמיכה"> תמיכה בלקוחות</label>
+    </div>
+    <div style="margin-top: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">אחר:</label>
+      <input type="text" id="other-tasks" placeholder="משימות נוספות" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3️⃣ כלי עבודה וטכנולוגיה</div>
+    <label style="display: block; font-size: 12px; color: #666; margin-bottom: 8px;">כלים בשימוש:</label>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <label><input type="checkbox" class="tool-checkbox" value="יומן גוגל"> יומן גוגל</label>
+      <label><input type="checkbox" class="tool-checkbox" value="אקסל"> אקסל / גוגל שיטס</label>
+      <label><input type="checkbox" class="tool-checkbox" value="חשבוניות"> חשבונית ירוקה / כלי חשבוניות</label>
+      <label><input type="checkbox" class="tool-checkbox" value="זום"> זום (יש מנוי?)</label>
+    </div>
+    <div style="margin-top: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">כלים אחרים:</label>
+      <input type="text" id="other-tools" placeholder="כלים נוספים" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">4️⃣ תקשורת וזמינות</div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">שעות עבודה</label>
+      <input type="text" id="work-hours" placeholder="לדוגמה: 9-18" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">דרך תקשורת מועדפת</label>
+      <input type="text" id="comm-method" placeholder="וטסאפ, אימייל, קול, וידאו וכו'" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">תדירות עדכונים רצויה</label>
+      <input type="text" id="update-freq" placeholder="יומי, שבועי, לפי הצורך וכו'" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">5️⃣ אנשי קשר קבועים</div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">רואה חשבון (שם + טלפון + מייל)</label>
+      <input type="text" id="accountant" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">עורך/ת דין (שם + טלפון + מייל)</label>
+      <input type="text" id="lawyer" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">לקוחות / ספקים עיקריים</label>
+      <textarea id="key-contacts" placeholder="שם + טלפון + מייל, שורה אחת לכל אדם" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; direction: rtl; min-height: 60px; font-family: inherit;"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">6️⃣ ציפיות ובקשות</div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">מה חשוב לך שיקרה בעסק?</label>
+      <textarea id="expectations" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; direction: rtl; min-height: 60px; font-family: inherit;"></textarea>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">ממה היית רוצה שאתחיל?</label>
+      <textarea id="start-from" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; direction: rtl; min-height: 60px; font-family: inherit;"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">דוקומנטציה</div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">שעות לחודש</label>
       <input type="number" id="client-hours" placeholder="25" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
@@ -116,10 +217,6 @@
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">עלות חודשית</label>
       <input type="number" id="client-cost" placeholder="4700" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
-    </div>
-    <div style="margin-bottom: 12px;">
-      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">אנשי קשר (שם + טלפון, שורה אחת לכל אדם)</label>
-      <textarea id="client-contacts" placeholder="אירית ליברמן: 053-250-2992&#10;אפרת פרנקו: 050-4585425" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; direction: rtl; min-height: 80px; font-family: inherit;"></textarea>
     </div>
   </div>
 
@@ -195,7 +292,30 @@ function loadCheckboxes() {
 
 function loadClients() {
   var saved = localStorage.getItem('youdoyou_clients');
-  return saved ? JSON.parse(saved) : {'נובו נדל"ן': {hours: 25, cost: 4700, contacts: 'אירית ליברמן: 053-250-2992\nאפרת פרנקו: 050-4585425'}};
+  return saved ? JSON.parse(saved) : {
+    'נובו נדל"ן': {
+      businessName: 'נובו נדל"ן',
+      businessField: 'נדלן',
+      businessDuration: 'יותר מ-10 שנים',
+      role: 'בעלות / ניהול',
+      employees: 2,
+      email: '',
+      tasks: ['יומן', 'תיאומים', 'גבייה'],
+      otherTasks: '',
+      tools: ['יומן גוגל'],
+      otherTools: '',
+      workHours: '9-18',
+      commMethod: 'וטסאפ',
+      updateFreq: 'יומי',
+      accountant: '',
+      lawyer: '',
+      keyContacts: '',
+      expectations: 'ניהול חלק של כל הניהול המשרדי היומי',
+      startFrom: 'ניהול יומן + תיאום פגישות',
+      hours: 25,
+      cost: 4700
+    }
+  };
 }
 
 function saveClients(clients) {
@@ -218,33 +338,98 @@ function populateClientSelect() {
 function loadClientToForm(clientName) {
   var clients = loadClients();
   if (clients[clientName]) {
-    var client = clients[clientName];
-    document.getElementById('client-name').value = clientName;
-    document.getElementById('client-hours').value = client.hours;
-    document.getElementById('client-cost').value = client.cost;
-    document.getElementById('client-contacts').value = client.contacts;
+    var c = clients[clientName];
+    document.getElementById('business-name').value = c.businessName || '';
+    document.getElementById('business-field').value = c.businessField || '';
+    document.getElementById('business-duration').value = c.businessDuration || '';
+    document.getElementById('client-role').value = c.role || '';
+    document.getElementById('employees-count').value = c.employees || '';
+    document.getElementById('client-email').value = c.email || '';
+    document.getElementById('other-tasks').value = c.otherTasks || '';
+    document.getElementById('other-tools').value = c.otherTools || '';
+    document.getElementById('work-hours').value = c.workHours || '';
+    document.getElementById('comm-method').value = c.commMethod || '';
+    document.getElementById('update-freq').value = c.updateFreq || '';
+    document.getElementById('accountant').value = c.accountant || '';
+    document.getElementById('lawyer').value = c.lawyer || '';
+    document.getElementById('key-contacts').value = c.keyContacts || '';
+    document.getElementById('expectations').value = c.expectations || '';
+    document.getElementById('start-from').value = c.startFrom || '';
+    document.getElementById('client-hours').value = c.hours || '';
+    document.getElementById('client-cost').value = c.cost || '';
+
+    var checkboxes = document.querySelectorAll('.task-checkbox');
+    for (var i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = (c.tasks || []).indexOf(checkboxes[i].value) !== -1;
+    }
+    var toolCheckboxes = document.querySelectorAll('.tool-checkbox');
+    for (var i = 0; i < toolCheckboxes.length; i++) {
+      toolCheckboxes[i].checked = (c.tools || []).indexOf(toolCheckboxes[i].value) !== -1;
+    }
+
     showPreview(clientName);
   }
 }
 
 function newClient() {
   document.getElementById('client-select').value = '';
-  document.getElementById('client-name').value = '';
+  document.getElementById('business-name').value = '';
+  document.getElementById('business-field').value = '';
+  document.getElementById('business-duration').value = '';
+  document.getElementById('client-role').value = '';
+  document.getElementById('employees-count').value = '';
+  document.getElementById('client-email').value = '';
+  document.getElementById('other-tasks').value = '';
+  document.getElementById('other-tools').value = '';
+  document.getElementById('work-hours').value = '';
+  document.getElementById('comm-method').value = '';
+  document.getElementById('update-freq').value = '';
+  document.getElementById('accountant').value = '';
+  document.getElementById('lawyer').value = '';
+  document.getElementById('key-contacts').value = '';
+  document.getElementById('expectations').value = '';
+  document.getElementById('start-from').value = '';
   document.getElementById('client-hours').value = '';
   document.getElementById('client-cost').value = '';
-  document.getElementById('client-contacts').value = '';
+  document.querySelectorAll('.task-checkbox').forEach(function(cb){cb.checked = false;});
+  document.querySelectorAll('.tool-checkbox').forEach(function(cb){cb.checked = false;});
   document.getElementById('client-preview').style.display = 'none';
 }
 
 function saveClient() {
-  var name = document.getElementById('client-name').value.trim();
-  if (!name) { alert('הזן שם לקוח'); return; }
+  var name = document.getElementById('business-name').value.trim();
+  if (!name) { alert('הזן שם עסק'); return; }
+
+  var tasks = [];
+  var taskCbs = document.querySelectorAll('.task-checkbox:checked');
+  for (var i = 0; i < taskCbs.length; i++) tasks.push(taskCbs[i].value);
+
+  var tools = [];
+  var toolCbs = document.querySelectorAll('.tool-checkbox:checked');
+  for (var i = 0; i < toolCbs.length; i++) tools.push(toolCbs[i].value);
 
   var clients = loadClients();
   clients[name] = {
+    businessName: name,
+    businessField: document.getElementById('business-field').value,
+    businessDuration: document.getElementById('business-duration').value,
+    role: document.getElementById('client-role').value,
+    employees: parseInt(document.getElementById('employees-count').value) || 0,
+    email: document.getElementById('client-email').value,
+    tasks: tasks,
+    otherTasks: document.getElementById('other-tasks').value,
+    tools: tools,
+    otherTools: document.getElementById('other-tools').value,
+    workHours: document.getElementById('work-hours').value,
+    commMethod: document.getElementById('comm-method').value,
+    updateFreq: document.getElementById('update-freq').value,
+    accountant: document.getElementById('accountant').value,
+    lawyer: document.getElementById('lawyer').value,
+    keyContacts: document.getElementById('key-contacts').value,
+    expectations: document.getElementById('expectations').value,
+    startFrom: document.getElementById('start-from').value,
     hours: parseInt(document.getElementById('client-hours').value) || 0,
-    cost: parseInt(document.getElementById('client-cost').value) || 0,
-    contacts: document.getElementById('client-contacts').value
+    cost: parseInt(document.getElementById('client-cost').value) || 0
   };
   saveClients(clients);
   populateClientSelect();
@@ -255,17 +440,19 @@ function saveClient() {
 function showPreview(clientName) {
   var clients = loadClients();
   if (clients[clientName]) {
-    var client = clients[clientName];
-    var html = '<p><strong>' + clientName + '</strong></p>' +
-               '<p>' + client.hours + ' שעות לחודש</p>' +
-               '<p>₪' + client.cost + '</p>' +
-               '<div style="margin-top: 12px; font-size: 13px;">' +
-               '<strong>אנשי קשר:</strong><br>';
-    var contacts = client.contacts.split('\n');
-    for (var i = 0; i < contacts.length; i++) {
-      if (contacts[i].trim()) html += contacts[i] + '<br>';
+    var c = clients[clientName];
+    var html = '<strong style="font-size: 14px;">📋 ' + c.businessName + '</strong>' +
+               '<p style="margin: 8px 0; font-size: 12px; color: #666;">' +
+               'תחום: ' + c.businessField + ' | ' + c.businessDuration + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;">📧 ' + c.email + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;">💼 ' + c.hours + ' שעות | ₪' + c.cost + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>משימות:</strong> ' + (c.tasks || []).join(', ') + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>כלים:</strong> ' + (c.tools || []).join(', ') + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>תקשורת:</strong> ' + c.commMethod + ' | ' + c.workHours + '</p>';
+    if (c.keyContacts) {
+      html += '<p style="margin: 8px 0; font-size: 12px;"><strong>אנשי קשר:</strong><br>' +
+              c.keyContacts.split('\n').filter(function(x){return x.trim();}).join('<br>') + '</p>';
     }
-    html += '</div>';
     document.getElementById('preview-content').innerHTML = html;
     document.getElementById('client-preview').style.display = 'block';
   }
