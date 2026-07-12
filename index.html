@@ -301,7 +301,7 @@ function updateProgress() {
   document.getElementById('prog-text').textContent = done + ' / ' + all.length;
   document.getElementById('prog-text-top').textContent = done + ' / ' + all.length;
   saveCheckboxes();
-  updateTracker();
+  setTimeout(updateTracker, 100);
 }
 
 function saveCheckboxes() {
@@ -653,5 +653,4 @@ if (document.readyState === 'loading') {
 }
 </script>
 
-</body>
-</html>
+<
