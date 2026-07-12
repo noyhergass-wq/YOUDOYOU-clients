@@ -150,4 +150,146 @@
 
 <script>
 function showTab(name, btn) {
-  var ob = document.getElementById('onboa
+  var ob = document.getElementById('onboarding');
+  var cd = document.getElementById('card');
+  var tr = document.getElementById('tracker');
+  if (ob) ob.style.display = 'none';
+  if (cd) cd.style.display = 'none';
+  if (tr) tr.style.display = 'none';
+  var target = document.getElementById(name);
+  if (target) target.style.display = 'block';
+  var btns = document.querySelectorAll('.tab-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+  btn.classList.add('active');
+}
+
+function updateProgress() {
+  var all = document.querySelectorAll('.chk');
+  var done = 0;
+  for (var i = 0; i < all.length; i++) if (all[i].checked) done++;
+  var pct = Math.round(done / all.length * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + all.length;
+  document.getElementById('prog-text-top').textContent = done + ' / ' + all.length;
+  saveCheckboxes();
+}
+
+function saveCheckboxes() {
+  var all = document.querySelectorAll('.chk');
+  var states = [];
+  for (var i = 0; i < all.length; i++) states.push(all[i].checked ? 1 : 0);
+  localStorage.setItem('onboarding_checkboxes', JSON.stringify(states));
+}
+
+function loadCheckboxes() {
+  var saved = localStorage.getItem('onboarding_checkboxes');
+  if (saved) {
+    var states = JSON.parse(saved);
+    var all = document.querySelectorAll('.chk');
+    for (var i = 0; i < all.length && i < states.length; i++) {
+      all[i].checked = states[i] === 1;
+    }
+    updateProgress();
+  }
+}
+
+function loadClients() {
+  var saved = localStorage.getItem('youdoyou_clients');
+  return saved ? JSON.parse(saved) : {'נובו נדל"ן': {hours: 25, cost: 4700, contacts: 'אירית ליברמן: 053-250-2992\nאפרת פרנקו: 050-4585425'}};
+}
+
+function saveClients(clients) {
+  localStorage.setItem('youdoyou_clients', JSON.stringify(clients));
+}
+
+function populateClientSelect() {
+  var clients = loadClients();
+  var select = document.getElementById('client-select');
+  if (!select) return;
+  select.innerHTML = '<option value="">-- בחר לקוח קיים --</option>';
+  for (var name in clients) {
+    var opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  }
+}
+
+function loadClientToForm(clientName) {
+  var clients = loadClients();
+  if (clients[clientName]) {
+    var client = clients[clientName];
+    document.getElementById('client-name').value = clientName;
+    document.getElementById('client-hours').value = client.hours;
+    document.getElementById('client-cost').value = client.cost;
+    document.getElementById('client-contacts').value = client.contacts;
+    showPreview(clientName);
+  }
+}
+
+function newClient() {
+  document.getElementById('client-select').value = '';
+  document.getElementById('client-name').value = '';
+  document.getElementById('client-hours').value = '';
+  document.getElementById('client-cost').value = '';
+  document.getElementById('client-contacts').value = '';
+  document.getElementById('client-preview').style.display = 'none';
+}
+
+function saveClient() {
+  var name = document.getElementById('client-name').value.trim();
+  if (!name) { alert('הזן שם לקוח'); return; }
+
+  var clients = loadClients();
+  clients[name] = {
+    hours: parseInt(document.getElementById('client-hours').value) || 0,
+    cost: parseInt(document.getElementById('client-cost').value) || 0,
+    contacts: document.getElementById('client-contacts').value
+  };
+  saveClients(clients);
+  populateClientSelect();
+  showPreview(name);
+  alert('לקוח נשמר בהצלחה!');
+}
+
+function showPreview(clientName) {
+  var clients = loadClients();
+  if (clients[clientName]) {
+    var client = clients[clientName];
+    var html = '<p><strong>' + clientName + '</strong></p>' +
+               '<p>' + client.hours + ' שעות לחודש</p>' +
+               '<p>₪' + client.cost + '</p>' +
+               '<div style="margin-top: 12px; font-size: 13px;">' +
+               '<strong>אנשי קשר:</strong><br>';
+    var contacts = client.contacts.split('\n');
+    for (var i = 0; i < contacts.length; i++) {
+      if (contacts[i].trim()) html += contacts[i] + '<br>';
+    }
+    html += '</div>';
+    document.getElementById('preview-content').innerHTML = html;
+    document.getElementById('client-preview').style.display = 'block';
+  }
+}
+
+function initPage() {
+  loadCheckboxes();
+  populateClientSelect();
+  var select = document.getElementById('client-select');
+  if (select) {
+    select.addEventListener('change', function() {
+      if (this.value) loadClientToForm(this.value);
+    });
+  }
+  var d = new Date();
+  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPage);
+} else {
+  initPage();
+}
+</script>
+
+</body>
+</html>
