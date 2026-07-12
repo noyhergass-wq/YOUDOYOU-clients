@@ -239,17 +239,22 @@
   </div>
   <div class="card" style="overflow-x: auto;">
     <div class="card-title">טרקר לקוחות</div>
-    <table id="tracker-table" style="width: 100%; border-collapse: collapse; font-size: 12px;">
+    <table id="tracker-table" style="width: 100%; border-collapse: collapse; font-size: 11px; background: white;">
       <thead>
-        <tr style="background: #f9f8f6; border-bottom: 2px solid #ddd;">
-          <th style="padding: 10px; text-align: right; border-right: 1px solid #ddd;">שם לקוח</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">סגירה</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">השרוי</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">שיחה</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">הקמה</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">שעות</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 60px;">עלות</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">התקדמות</th>
+        <tr style="background: #2a2a3a; color: #e8b86d; border-bottom: 2px solid #ddd;">
+          <th style="padding: 8px; text-align: right; border-right: 1px solid #ddd; position: sticky; left: 0; background: #2a2a3a; z-index: 1;">שם לקוח</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">סגירה עסקית</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">שיחת אפיון</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">הקמה</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">כרטיס לקוח</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">כלים</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">משימות</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">תקשורת</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">אנשי קשר</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 40px;">ציפיות</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 50px;">שעות</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 60px;">עלות</th>
+          <th style="padding: 8px; text-align: center; border-right: 1px solid #ddd; width: 50px;">התקדמות</th>
         </tr>
       </thead>
       <tbody id="tracker-tbody">
@@ -491,52 +496,34 @@ function updateTracker() {
 
   var totalRevenue = 0;
   tbody.innerHTML = '';
+  var completedCount = 0;
 
   for (var name in clients) {
     var c = clients[name];
-    var stageMark1 = stage1 === 7 && name === currentClient ? '✓' : '';
-    var stageMark2 = stage2 === 4 && name === currentClient ? '✓' : '';
-    var stageMark3 = stage3 === 3 && name === currentClient ? '✓' : '';
-    var progress = Math.round(((stageMark1 ? 1 : 0) + (stageMark2 ? 1 : 0) + (stageMark3 ? 1 : 0)) / 3 * 100);
+    var color1 = stage1 === 7 && name === currentClient ? '#1a1a2e' : '#ccc';
+    var color2 = stage2 === 4 && name === currentClient ? '#1a1a2e' : '#ccc';
+    var color3 = stage3 === 3 && name === currentClient ? '#1a1a2e' : '#ccc';
+    var color4 = c.businessName ? '#1a1a2e' : '#ccc';
+    var color5 = (c.tools && c.tools.length > 0) ? '#1a1a2e' : '#ccc';
+    var color6 = (c.tasks && c.tasks.length > 0) ? '#1a1a2e' : '#ccc';
+    var color7 = c.commMethod ? '#1a1a2e' : '#ccc';
+    var color8 = c.keyContacts ? '#1a1a2e' : '#ccc';
+    var color9 = c.expectations ? '#1a1a2e' : '#ccc';
+
+    var completed = (stage1 === 7 && name === currentClient ? 1 : 0) +
+                    (stage2 === 4 && name === currentClient ? 1 : 0) +
+                    (stage3 === 3 && name === currentClient ? 1 : 0) +
+                    (c.businessName ? 1 : 0) +
+                    (c.tools && c.tools.length > 0 ? 1 : 0) +
+                    (c.tasks && c.tasks.length > 0 ? 1 : 0) +
+                    (c.commMethod ? 1 : 0) +
+                    (c.keyContacts ? 1 : 0) +
+                    (c.expectations ? 1 : 0);
+    var progress = Math.round(completed / 9 * 100);
 
     var row = document.createElement('tr');
-    row.style.borderBottom = '1px solid #eee';
-    row.innerHTML = '<td style="padding: 8px; text-align: right; border-right: 1px solid #ddd;">' + name + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + (stageMark1 ? '#1a1a2e' : '#ccc') + '; font-weight: bold;">' + stageMark1 + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + (stageMark1 ? '#1a1a2e' : '#ccc') + '; font-weight: bold;">' + stageMark1 + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + (stageMark2 ? '#1a1a2e' : '#ccc') + '; font-weight: bold;">' + stageMark2 + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + (stageMark3 ? '#1a1a2e' : '#ccc') + '; font-weight: bold;">' + stageMark3 + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">' + c.hours + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">₪' + c.cost + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; font-weight: bold; color: #e8b86d;">' + progress + '%</td>';
-    tbody.appendChild(row);
-    totalRevenue += c.cost;
-  }
-
-  document.getElementById('summary-count').textContent = 'לקוחות פעילים: ' + Object.keys(clients).length;
-  document.getElementById('summary-revenue').textContent = 'הכנסה: ₪' + totalRevenue;
-}
-
-function initPage() {
-  loadCheckboxes();
-  populateClientSelect();
-  updateTracker();
-  var select = document.getElementById('client-select');
-  if (select) {
-    select.addEventListener('change', function() {
-      if (this.value) loadClientToForm(this.value);
-    });
-  }
-  var d = new Date();
-  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPage);
-} else {
-  initPage();
-}
-</script>
-
-</body>
-</html>
+    row.style.borderBottom = '1px solid #f0f0f0';
+    row.innerHTML = '<td style="padding: 8px; text-align: right; border-right: 1px solid #ddd; font-weight: 500;">' + name + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color1 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color2 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' +
