@@ -94,15 +94,42 @@
 <!-- CLIENT CARD -->
 <div class="tab" id="card">
   <div class="card">
-    <div class="card-title">לקוחות</div>
-    <p><strong>נובו נדל"ן</strong></p>
-    <p>25 שעות לחודש</p>
-    <p>₪4,700</p>
+    <div class="card-title">בחר לקוח</div>
+    <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+      <select id="client-select" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+        <option value="">-- בחר לקוח קיים --</option>
+      </select>
+      <button onclick="newClient()" style="padding: 10px 16px; background: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">לקוח חדש</button>
+    </div>
   </div>
+
   <div class="card">
-    <div class="card-title">אנשי קשר</div>
-    <p>אירית ליברמן: 053-250-2992</p>
-    <p>אפרת פרנקו: 050-4585425</p>
+    <div class="card-title">פרטי לקוח</div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">שם לקוח</label>
+      <input type="text" id="client-name" placeholder="שם הלקוח" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">שעות לחודש</label>
+      <input type="number" id="client-hours" placeholder="25" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">עלות חודשית</label>
+      <input type="number" id="client-cost" placeholder="4700" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">אנשי קשר (שם + טלפון, שורה אחת לכל אדם)</label>
+      <textarea id="client-contacts" placeholder="אירית ליברמן: 053-250-2992&#10;אפרת פרנקו: 050-4585425" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; direction: rtl; min-height: 80px; font-family: inherit;"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <button onclick="saveClient()" style="width: 100%; padding: 12px; background: #1a1a2e; color: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600;">שמור לקוח</button>
+  </div>
+
+  <div class="card" id="client-preview" style="display: none;">
+    <div class="card-title">צפייה</div>
+    <div id="preview-content"></div>
   </div>
 </div>
 
@@ -123,55 +150,4 @@
 
 <script>
 function showTab(name, btn) {
-  var ob = document.getElementById('onboarding');
-  var cd = document.getElementById('card');
-  var tr = document.getElementById('tracker');
-  if (ob) ob.style.display = 'none';
-  if (cd) cd.style.display = 'none';
-  if (tr) tr.style.display = 'none';
-  var target = document.getElementById(name);
-  if (target) target.style.display = 'block';
-  var btns = document.querySelectorAll('.tab-btn');
-  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-  btn.classList.add('active');
-}
-
-function updateProgress() {
-  var all = document.querySelectorAll('.chk');
-  var done = 0;
-  for (var i = 0; i < all.length; i++) if (all[i].checked) done++;
-  var pct = Math.round(done / all.length * 100);
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-text').textContent = done + ' / ' + all.length;
-  document.getElementById('prog-text-top').textContent = done + ' / ' + all.length;
-  saveCheckboxes();
-}
-
-function saveCheckboxes() {
-  var all = document.querySelectorAll('.chk');
-  var states = [];
-  for (var i = 0; i < all.length; i++) states.push(all[i].checked ? 1 : 0);
-  localStorage.setItem('onboarding_checkboxes', JSON.stringify(states));
-}
-
-function loadCheckboxes() {
-  var saved = localStorage.getItem('onboarding_checkboxes');
-  if (saved) {
-    var states = JSON.parse(saved);
-    var all = document.querySelectorAll('.chk');
-    for (var i = 0; i < all.length && i < states.length; i++) {
-      all[i].checked = states[i] === 1;
-    }
-    updateProgress();
-  }
-}
-
-var d = new Date();
-document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
-window.addEventListener('DOMContentLoaded', loadCheckboxes);
-loadCheckboxes();
-</script>
-
-</body>
-</html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  var ob = document.getElementById('onboa
