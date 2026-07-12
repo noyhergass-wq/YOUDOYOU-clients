@@ -44,11 +44,6 @@
     .summary-card { flex: 1; background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 14px; }
     .summary-card .label { font-size: 11px; color: #999; margin-bottom: 4px; }
     .summary-card .value { font-size: 24px; font-weight: 600; color: #1a1a2e; }
-    .btn-group { display: flex; gap: 8px; margin-top: 12px; }
-    .btn { padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; }
-    .btn-primary { background: #1a1a2e; color: #fff; }
-    .btn-primary:hover { background: #2a2a3e; }
-    .select { width: 100%; padding: 8px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; direction: rtl; }
   </style>
 </head>
 <body>
@@ -67,46 +62,44 @@
 
 <div class="container">
 
-<!-- ONBOARDING TAB -->
 <div class="tab active" id="onboarding">
   <div class="card">
     <div class="sec-title">שלב 1 — סגירה עסקית</div>
     <ul class="checkbox-list">
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>קבלת תשלום ראשון באשראי טלפוני</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>שליחת הסכם לחתימה דיגיטלית</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>קבלת תשלום ראשון</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>שליחת הסכם</label></li>
       <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>קבלת הסכם חתום</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>הגדרת הוראת קבע (הו"ק)</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>תיאום שיחת האפיון (45–60 דקות)</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>שמירת ההסכם החתום בתיקייה</label></li>
-      <li style="opacity: 0.6;"><input type="checkbox" class="chk" onchange="updateProgress()"><label>שליחת הודעת ברוכים הבאים (אופציונלי)</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>הגדרת הו"ק</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>תיאום שיחת אפיון</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>שמירת הסכם</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>הודעת ברוכים הבאים</label></li>
     </ul>
   </div>
   <div class="card">
-    <div class="sec-title">שלב 2 — שיחת האפיון</div>
+    <div class="sec-title">שלב 2 — אפיון</div>
     <ul class="checkbox-list">
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>מילוי כרטיס לקוח במהלך השיחה</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>קבלת רשימת אנשי קשר</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>קבלת גישה ליומן גוגל</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>קבלת גישה לחשבוניות</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>מילוי כרטיס לקוח</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>קבלת אנשי קשר</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>גישה ליומן גוגל</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>גישה לחשבוניות</label></li>
     </ul>
   </div>
   <div class="card">
-    <div class="sec-title">שלב 3 — הקמה ומעבר לשוטף</div>
+    <div class="sec-title">שלב 3 — הקמה</div>
     <ul class="checkbox-list">
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>הוספת הלקוח לטרקר</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>הגדרת תזכורת גבייה</label></li>
-      <li style="opacity: 0.6;"><input type="checkbox" class="chk" onchange="updateProgress()"><label>צ'ק-אין אחרי שבוע (אופציונלי)</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>הוספה לטרקר</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>תזכורת גבייה</label></li>
+      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>צ'ק-אין</label></li>
     </ul>
     <div class="progress-text" id="prog-text">0 / 14 סעיפים (0%)</div>
     <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width: 0%;"></div></div>
   </div>
 </div>
 
-<!-- CLIENT CARD TAB -->
 <div class="tab" id="card">
   <div class="card">
     <div class="sec-title">בחר לקוח</div>
-    <select class="select" id="client-select" onchange="loadClient()">
+    <select id="client-select" onchange="loadClient()" style="width: 100%; padding: 8px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; direction: rtl;">
       <option value="">-- בחר לקוח --</option>
       <option value="0">נובו נדל"ן</option>
     </select>
@@ -115,31 +108,82 @@
     <div class="card">
       <div class="sec-title">פרטים בסיסיים</div>
       <div class="field-row">
-        <div class="field"><label>שם הלקוח</label><input type="text" id="f-name" value="נובו נדל"ן"></div>
-        <div class="field"><label>אתר</label><input type="text" id="f-website" value="noovo.co.il"></div>
-      </div>
-      <div class="field-row full">
-        <div class="field"><label>תחום עיסוק</label><input type="text" id="f-field" value="ניהול וקידום הליכי תכנון"></div>
+        <div class="field"><label>שם הלקוח</label><input type="text" value="נובו נדל"ן"></div>
+        <div class="field"><label>אתר</label><input type="text" value="noovo.co.il"></div>
       </div>
       <div class="field-row">
-        <div class="field"><label>תחילת עבודה</label><input type="date" id="f-start" value="2024-06-01"></div>
-        <div class="field"><label>חבילה</label><input type="text" id="f-package" value="בינונית — 25 שעות"></div>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>סכום חודשי</label><input type="text" id="f-amount" value="4700"></div>
-        <div class="field"><label>תשלום</label><input type="text" id="f-payment" value="הו"ק ב-1 לחודש"></div>
+        <div class="field"><label>טלפון 1</label><input type="tel" value="053-250-2992"></div>
+        <div class="field"><label>טלפון 2</label><input type="tel" value="050-4585425"></div>
       </div>
     </div>
-    <div class="card">
-      <div class="sec-title">אנשי קשר</div>
-      <div class="field-row">
-        <div class="field"><label>שם — איש קשר 1</label><input type="text" id="f-c1-name" value="אירית ליברמן"></div>
-        <div class="field"><label>תפקיד</label><input type="text" id="f-c1-role" value="כלכלנית ושמאית"></div>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>טלפון</label><input type="tel" id="f-c1-phone" value="053-250-2992"></div>
-        <div class="field"><label>מייל</label><input type="email" id="f-c1-email" value="irit@noovo.co.il"></div>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>שם — איש קשר 2</label><input type="text" id="f-c2-name" value="אפרת פרנקו"></div>
-        <di
+  </div>
+</div>
+
+<div class="tab" id="tracker">
+  <div class="summary">
+    <div class="summary-card">
+      <div class="label">לקוחות פעילים</div>
+      <div class="value">1</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">הכנסה חודשית</div>
+      <div class="value">₪4,700</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">סה"כ לקוחות</div>
+      <div class="value">1</div>
+    </div>
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th>לקוח</th><th>חבילה</th><th>סכום</th><th>סטטוס</th></tr></thead>
+      <tbody><tr><td>נובו נדל"ן</td><td>25 שעות</td><td>₪4,700</td><td><span class="badge badge-active">פעיל</span></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showTab(name, btn) {
+  var onb = document.getElementById('onboarding');
+  var card = document.getElementById('card');
+  var track = document.getElementById('tracker');
+  if (onb) onb.style.display = 'none';
+  if (card) card.style.display = 'none';
+  if (track) track.style.display = 'none';
+  var target = document.getElementById(name);
+  if (target) target.style.display = 'block';
+  var btns = document.querySelectorAll('.tab-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.remove('active');
+  }
+  if (btn) btn.classList.add('active');
+}
+
+function updateProgress() {
+  var all = document.querySelectorAll('.chk');
+  var done = 0;
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].checked) done++;
+  }
+  var pct = Math.round(done / all.length * 100);
+  var fill = document.getElementById('prog-fill');
+  if (fill) fill.style.width = pct + '%';
+  var txt = document.getElementById('prog-text');
+  if (txt) txt.textContent = done + ' / ' + all.length + ' (' + pct + '%)';
+}
+
+function loadClient() {
+  var sel = document.getElementById('client-select');
+  var form = document.getElementById('client-form');
+  if (form) form.style.display = sel.value ? 'block' : 'none';
+}
+
+var d = new Date();
+var hdr = document.getElementById('date-header');
+if (hdr) hdr.textContent = d.toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+</script>
+
+</body>
+</html>
