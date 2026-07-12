@@ -290,4 +290,36 @@ function prog() {
   var all = document.querySelectorAll('#tab-onboarding input[type=checkbox]');
   var done = 0;
   all.forEach(function(c){ if(c.checked) done++; });
-  var pct = Math.round(do
+  var pct = Math.round(done / all.length * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = done + ' / ' + all.length + ' סעיפים';
+  document.getElementById('prog-pct').textContent = pct + '%';
+}
+
+function renderTracker() {
+  var smap = { active:['פעיל','s-active'], onboarding:['אונבורדינג','s-onboarding'], paused:['מושהה','s-paused'] };
+  var tbody = document.getElementById('tbody');
+  var active = 0, income = 0;
+  if (!CLIENTS.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#ccc;padding:40px 0;">אין לקוחות עדיין</td></tr>';
+  } else {
+    tbody.innerHTML = CLIENTS.map(function(c) {
+      var s = smap[c.status] || ['לא ידוע',''];
+      if (c.status==='active'){ active++; income += (c.amt||0); }
+      return '<tr><td><div class="client-name-cell">' + (c.name||'') + '</div>' + (c.sub ? '<div class="client-sub-cell">'+c.sub+'</div>' : '') + '</td><td>' + (c.pkg||'') + '</td><td>₪' + ((c.amt||0).toLocaleString()) + '</td><td>' + (c.start||'') + '</td><td><span class="sbadge ' + s[1] + '">' + s[0] + '</span></td><td style="color:#888;font-size:13px;">' + (c.notes||'') + '</td></tr>';
+    }).join('');
+  }
+  document.getElementById('cnt-active').textContent = active;
+  document.getElementById('cnt-income').textContent = '₪' + income.toLocaleString();
+  document.getElementById('cnt-total').textContent = CLIENTS.length;
+}
+
+var d = new Date();
+document.getElementById('hdate').textContent = d.toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+prog();
+renderTracker();
+populateClientSelect();
+</script>
+</body>
+</html>
