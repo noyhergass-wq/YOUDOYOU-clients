@@ -50,7 +50,7 @@
 <div class="tab active" id="onboarding">
   <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
     <label style="font-size: 13px; color: #777; white-space: nowrap;">לקוח נוכחי:</label>
-    <select id="onboarding-client-select" style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    <select id="onboarding-client-select" onchange="if(this.value){setCurrentClient(this.value);loadCheckboxes();}" style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
       <option value="">-- בחר לקוח --</option>
     </select>
     <button onclick="newOnboardingClient()" style="padding: 8px 16px; background: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">לקוח חדש</button>
@@ -628,21 +628,13 @@ function initPage() {
   document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
 }
 
-function setupEventListeners() {
-  var obSelect = document.getElementById('onboarding-client-select');
-  if (obSelect && !obSelect._listenerAttached) {
-    obSelect._listenerAttached = true;
-    obSelect.addEventListener('change', function() {
-      if (this.value) {
-        setCurrentClient(this.value);
-        loadCheckboxes();
-      }
-    });
-  }
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPage);
+} else {
+  initPage();
+}
+</script>
 
-  var select = document.getElementById('client-select');
-  if (select && !select._listenerAttached) {
-    select._listenerAttached = true;
-    select.addEventListener('change', function() {
-      if (this.value) loadClientToForm(this.value);
-    })
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                       
