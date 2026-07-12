@@ -243,9 +243,9 @@
       <thead>
         <tr style="background: #f9f8f6; border-bottom: 2px solid #ddd;">
           <th style="padding: 10px; text-align: right; border-right: 1px solid #ddd;">שם לקוח</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">סגירה</th>
           <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">השרוי</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">סגירה עסקית</th>
-          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">שיחת אפיון</th>
+          <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">שיחה</th>
           <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">הקמה</th>
           <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 50px;">שעות</th>
           <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 60px;">עלות</th>
@@ -462,4 +462,81 @@ function showPreview(clientName) {
                'תחום: ' + c.businessField + ' | ' + c.businessDuration + '</p>' +
                '<p style="margin: 8px 0; font-size: 12px;">📧 ' + c.email + '</p>' +
                '<p style="margin: 8px 0; font-size: 12px;">💼 ' + c.hours + ' שעות | ₪' + c.cost + '</p>' +
-               '<p style="margin: 8px 0; font-size: 1
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>משימות:</strong> ' + (c.tasks || []).join(', ') + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>כלים:</strong> ' + (c.tools || []).join(', ') + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>תקשורת:</strong> ' + c.commMethod + ' | ' + c.workHours + '</p>';
+    if (c.keyContacts) {
+      html += '<p style="margin: 8px 0; font-size: 12px;"><strong>אנשי קשר:</strong><br>' +
+              c.keyContacts.split('\n').filter(function(x){return x.trim();}).join('<br>') + '</p>';
+    }
+    document.getElementById('preview-content').innerHTML = html;
+    document.getElementById('client-preview').style.display = 'block';
+  }
+}
+
+function updateTracker() {
+  var tbody = document.getElementById('tracker-tbody');
+  if (!tbody) return;
+
+  var all = document.querySelectorAll('.chk');
+  var stage1 = 0, stage2 = 0, stage3 = 0;
+
+  for (var i = 0; i < 7 && i < all.length; i++) if (all[i].checked) stage1++;
+  for (var i = 7; i < 11 && i < all.length; i++) if (all[i].checked) stage2++;
+  for (var i = 11; i < 14 && i < all.length; i++) if (all[i].checked) stage3++;
+
+  var clients = loadClients();
+  var clientName = document.getElementById('client-name-input').value.trim();
+  var currentClient = clientName || 'נובו נדל"ן';
+
+  var totalRevenue = 0;
+  tbody.innerHTML = '';
+
+  for (var name in clients) {
+    var c = clients[name];
+    var stageMark1 = stage1 === 7 && name === currentClient ? '✓' : '';
+    var stageMark2 = stage2 === 4 && name === currentClient ? '✓' : '';
+    var stageMark3 = stage3 === 3 && name === currentClient ? '✓' : '';
+    var progress = Math.round(((stageMark1 ? 1 : 0) + (stageMark2 ? 1 : 0) + (stageMark3 ? 1 : 0)) / 3 * 100);
+
+    var row = document.createElement('tr');
+    row.style.borderBottom = '1px solid #eee';
+    row.innerHTML = '<td style="padding: 8px; text-align: right; border-right: 1px solid #ddd;">' + name + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + (stageMark1 ? '#1a1a2e' : '#ccc') + '; font-weight: bold;">' + stageMark1 + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + (stageMark1 ? '#1a1a2e' : '#ccc') + '; font-weight: bold;">' + stageMark1 + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + (stageMark2 ? '#1a1a2e' : '#ccc') + '; font-weight: bold;">' + stageMark2 + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + (stageMark3 ? '#1a1a2e' : '#ccc') + '; font-weight: bold;">' + stageMark3 + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">' + c.hours + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">₪' + c.cost + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; font-weight: bold; color: #e8b86d;">' + progress + '%</td>';
+    tbody.appendChild(row);
+    totalRevenue += c.cost;
+  }
+
+  document.getElementById('summary-count').textContent = 'לקוחות פעילים: ' + Object.keys(clients).length;
+  document.getElementById('summary-revenue').textContent = 'הכנסה: ₪' + totalRevenue;
+}
+
+function initPage() {
+  loadCheckboxes();
+  populateClientSelect();
+  updateTracker();
+  var select = document.getElementById('client-select');
+  if (select) {
+    select.addEventListener('change', function() {
+      if (this.value) loadClientToForm(this.value);
+    });
+  }
+  var d = new Date();
+  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPage);
+} else {
+  initPage();
+}
+</script>
+
+</body>
+</html>
