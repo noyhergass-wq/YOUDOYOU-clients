@@ -583,31 +583,22 @@ function updateTracker() {
   var totalRevenue = 0;
   tbody.innerHTML = '';
 
-  // Get stages for current client from checkboxes if visible
-  var stage1 = 0, stage2 = 0, stage3 = 0;
-  if (currentClient) {
-    var onboarding = document.getElementById('onboarding');
-    if (onboarding && onboarding.style.display !== 'none') {
-      var all = document.querySelectorAll('.chk');
-      for (var i = 0; i < 7 && i < all.length; i++) if (all[i].checked) stage1++;
-      for (var i = 7; i < 11 && i < all.length; i++) if (all[i].checked) stage2++;
-      for (var i = 11; i < 14 && i < all.length; i++) if (all[i].checked) stage3++;
-    }
-  }
-
   for (var name in clients) {
     var c = clients[name];
 
+    var saved = localStorage.getItem('onboarding_checkboxes_' + name);
+    var states = saved ? JSON.parse(saved) : [];
     var s1 = 0, s2 = 0, s3 = 0;
-    if (name === currentClient) {
-      s1 = stage1;
-      s2 = stage2;
-      s3 = stage3;
-    }
+    for (var i = 0; i < 7 && i < states.length; i++) if (states[i]) s1++;
+    for (var i = 7; i < 11 && i < states.length; i++) if (states[i]) s2++;
+    for (var i = 11; i < 14 && i < states.length; i++) if (states[i]) s3++;
 
-    var color1 = s1 === 7 ? '#1a1a2e' : '#ccc';
-    var color2 = s2 === 4 ? '#1a1a2e' : '#ccc';
-    var color3 = s3 === 3 ? '#1a1a2e' : '#ccc';
+    var color1 = s1 === 7 ? '#2e7d32' : (s1 > 0 ? '#ccc' : 'transparent');
+    var color2 = s2 === 4 ? '#2e7d32' : (s2 > 0 ? '#ccc' : 'transparent');
+    var color3 = s3 === 3 ? '#2e7d32' : (s3 > 0 ? '#ccc' : 'transparent');
+    var mark1 = s1 === 0 ? '' : '✓';
+    var mark2 = s2 === 0 ? '' : '✓';
+    var mark3 = s3 === 0 ? '' : '✓';
     var color4 = c.businessName ? '#1a1a2e' : '#ccc';
     var color5 = (c.tools && c.tools.length > 0) ? '#1a1a2e' : '#ccc';
     var color6 = (c.tasks && c.tasks.length > 0) ? '#1a1a2e' : '#ccc';
@@ -630,9 +621,9 @@ function updateTracker() {
     row.style.borderBottom = '1px solid #f0f0f0';
     row.style.background = name === currentClient ? '#f5f4f1' : '#fff';
     row.innerHTML = '<td style="padding: 8px; text-align: right; border-right: 1px solid #ddd; font-weight: 500;">' + name + (name === currentClient ? ' (עכשיו)' : '') + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color1 + '; font-weight: bold;">✓</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color2 + '; font-weight: bold;">✓</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color3 + '; font-weight: bold;">✓</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color1 + '; font-weight: bold;">' + mark1 + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color2 + '; font-weight: bold;">' + mark2 + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color3 + '; font-weight: bold;">' + mark3 + '</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color4 + '; font-weight: bold;">✓</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color5 + '; font-weight: bold;">✓</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color6 + '; font-weight: bold;">✓</td>' +
