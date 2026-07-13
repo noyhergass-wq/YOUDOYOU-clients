@@ -142,7 +142,7 @@
   <div class="card">
     <div class="card-title">2️⃣ משימות וצרכים</div>
     <label style="display: block; font-size: 12px; color: #666; margin-bottom: 8px;">אילו משימות?</label>
-    <div style="display: flex; flex-direction: column; gap: 6px;">
+    <div id="task-checkbox-list" style="display: flex; flex-direction: column; gap: 6px;">
       <label><input type="checkbox" class="task-checkbox" value="יומן"> ניהול יומן</label>
       <label><input type="checkbox" class="task-checkbox" value="תיאומים"> תיאומים ופגישות</label>
       <label><input type="checkbox" class="task-checkbox" value="מייל"> מענה למיילים</label>
@@ -153,14 +153,17 @@
     </div>
     <div style="margin-top: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">אחר:</label>
-      <input type="text" id="other-tasks" placeholder="משימות נוספות" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="other-tasks" placeholder="משימה נוספת" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomChecklistItem('other-tasks','task-checkbox-list','task-checkbox');}" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+        <button type="button" onclick="addCustomChecklistItem('other-tasks','task-checkbox-list','task-checkbox')" style="padding: 10px 16px; background: #1a1a2e; color: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap;">הוסף</button>
+      </div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-title">3️⃣ כלי עבודה וטכנולוגיה</div>
     <label style="display: block; font-size: 12px; color: #666; margin-bottom: 8px;">כלים בשימוש:</label>
-    <div style="display: flex; flex-direction: column; gap: 6px;">
+    <div id="tool-checkbox-list" style="display: flex; flex-direction: column; gap: 6px;">
       <label><input type="checkbox" class="tool-checkbox" value="יומן גוגל"> יומן גוגל</label>
       <label><input type="checkbox" class="tool-checkbox" value="אקסל"> אקסל / גוגל שיטס</label>
       <label><input type="checkbox" class="tool-checkbox" value="חשבוניות"> חשבונית ירוקה / כלי חשבוניות</label>
@@ -168,7 +171,10 @@
     </div>
     <div style="margin-top: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">כלים אחרים:</label>
-      <input type="text" id="other-tools" placeholder="כלים נוספים" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="other-tools" placeholder="כלי נוסף" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomChecklistItem('other-tools','tool-checkbox-list','tool-checkbox');}" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+        <button type="button" onclick="addCustomChecklistItem('other-tools','tool-checkbox-list','tool-checkbox')" style="padding: 10px 16px; background: #1a1a2e; color: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap;">הוסף</button>
+      </div>
     </div>
   </div>
 
@@ -409,6 +415,52 @@ function populateClientSelect() {
   }
 }
 
+function appendCustomItem(container, checkboxClass, value, checked) {
+  var label = document.createElement('label');
+  label.className = 'custom-item';
+  var cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = checkboxClass;
+  cb.value = value;
+  cb.checked = checked;
+  label.appendChild(cb);
+  label.appendChild(document.createTextNode(' ' + value));
+  container.appendChild(label);
+}
+
+function resetCustomItems(containerId) {
+  var container = document.getElementById(containerId);
+  var customs = container.querySelectorAll('.custom-item');
+  for (var i = 0; i < customs.length; i++) customs[i].remove();
+}
+
+function syncCustomItems(values, containerId, checkboxClass) {
+  var container = document.getElementById(containerId);
+  var existing = document.querySelectorAll('.' + checkboxClass);
+  var existingValues = [];
+  for (var i = 0; i < existing.length; i++) existingValues.push(existing[i].value);
+  (values || []).forEach(function(v) {
+    if (existingValues.indexOf(v) === -1) appendCustomItem(container, checkboxClass, v, true);
+  });
+}
+
+function addCustomChecklistItem(inputId, containerId, checkboxClass) {
+  var input = document.getElementById(inputId);
+  var value = input.value.trim();
+  if (!value) return;
+  var container = document.getElementById(containerId);
+  var existing = document.querySelectorAll('.' + checkboxClass);
+  for (var i = 0; i < existing.length; i++) {
+    if (existing[i].value === value) {
+      existing[i].checked = true;
+      input.value = '';
+      return;
+    }
+  }
+  appendCustomItem(container, checkboxClass, value, true);
+  input.value = '';
+}
+
 function loadClientToForm(clientName) {
   var clients = loadClients();
   if (clients[clientName]) {
@@ -432,6 +484,9 @@ function loadClientToForm(clientName) {
     document.getElementById('client-hours').value = c.hours || '';
     document.getElementById('client-cost').value = c.cost || '';
 
+    resetCustomItems('task-checkbox-list');
+    resetCustomItems('tool-checkbox-list');
+
     var checkboxes = document.querySelectorAll('.task-checkbox');
     for (var i = 0; i < checkboxes.length; i++) {
       checkboxes[i].checked = (c.tasks || []).indexOf(checkboxes[i].value) !== -1;
@@ -440,6 +495,9 @@ function loadClientToForm(clientName) {
     for (var i = 0; i < toolCheckboxes.length; i++) {
       toolCheckboxes[i].checked = (c.tools || []).indexOf(toolCheckboxes[i].value) !== -1;
     }
+
+    syncCustomItems(c.tasks, 'task-checkbox-list', 'task-checkbox');
+    syncCustomItems(c.tools, 'tool-checkbox-list', 'tool-checkbox');
 
     showPreview(clientName);
   }
@@ -467,6 +525,8 @@ function newClient() {
   document.getElementById('client-cost').value = '';
   document.querySelectorAll('.task-checkbox').forEach(function(cb){cb.checked = false;});
   document.querySelectorAll('.tool-checkbox').forEach(function(cb){cb.checked = false;});
+  resetCustomItems('task-checkbox-list');
+  resetCustomItems('tool-checkbox-list');
   document.getElementById('client-preview').style.display = 'none';
 }
 
