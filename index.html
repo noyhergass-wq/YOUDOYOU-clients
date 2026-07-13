@@ -348,6 +348,22 @@ function sendWelcomeEmail() {
   localStorage.setItem('welcome_message_' + client, text);
   var clients = loadClients();
   var email = (clients[client] && clients[client].email) || '';
+
+  if (!email) {
+    var entered = prompt('לא הוזנה כתובת מייל ללקוח הזה. מה כתובת המייל?');
+    if (entered && entered.trim()) {
+      email = entered.trim();
+      if (clients[client]) {
+        clients[client].email = email;
+        saveClients(clients);
+        var emailField = document.getElementById('client-email');
+        if (emailField && document.getElementById('business-name').value === client) {
+          emailField.value = email;
+        }
+      }
+    }
+  }
+
   var subject = encodeURIComponent('ברוכים הבאים ל-YOU DO YOU!');
   var body = encodeURIComponent(text);
   window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
