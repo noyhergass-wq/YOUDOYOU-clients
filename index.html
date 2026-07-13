@@ -116,7 +116,7 @@
   <div class="card">
     <div class="card-title">בחר לקוח</div>
     <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-      <select id="client-select" onchange="if(this.value){loadClientToForm(this.value);}" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+      <select id="client-select" onchange="hideCalendarMessage();if(this.value){loadClientToForm(this.value);}" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
         <option value="">-- בחר לקוח קיים --</option>
       </select>
       <button onclick="newClient()" style="padding: 10px 16px; background: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">לקוח חדש</button>
@@ -176,7 +176,16 @@
     <div class="card-title">3️⃣ כלי עבודה וטכנולוגיה</div>
     <label style="display: block; font-size: 12px; color: #666; margin-bottom: 8px;">כלים בשימוש:</label>
     <div id="tool-checkbox-list" style="display: flex; flex-direction: column; gap: 6px;">
-      <label><input type="checkbox" class="tool-checkbox" value="יומן גוגל"> יומן גוגל</label>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <label style="display: flex; align-items: center; gap: 8px; flex: 1;"><input type="checkbox" class="tool-checkbox" value="יומן גוגל"> יומן גוגל</label>
+        <button type="button" onclick="toggleCalendarMessage()" title="הצג/הסתר טקסט הודעה" style="background: none; border: 1px solid #ddd; border-radius: 4px; width: 22px; height: 22px; cursor: pointer; font-size: 14px; line-height: 1; color: #666; flex-shrink: 0;">+</button>
+      </div>
+      <div id="calendar-message-panel" style="display: none; margin: 4px 0 8px;">
+        <textarea id="calendar-message-text" oninput="saveCalendarMessageDraft()" style="width: 100%; min-height: 220px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; font-family: inherit; direction: rtl; resize: vertical;"></textarea>
+        <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
+          <button type="button" onclick="sendCalendarEmail()" style="padding: 8px 16px; background: #1a1a2e; color: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">שלח במייל</button>
+        </div>
+      </div>
       <label><input type="checkbox" class="tool-checkbox" value="אקסל"> אקסל / גוגל שיטס</label>
       <label><input type="checkbox" class="tool-checkbox" value="חשבוניות"> חשבונית ירוקה / כלי חשבוניות</label>
       <label><input type="checkbox" class="tool-checkbox" value="זום"> זום (יש מנוי?)</label>
@@ -365,6 +374,77 @@ function sendWelcomeEmail() {
   }
 
   var subject = encodeURIComponent('ברוכים הבאים ל-YOU DO YOU!');
+  var body = encodeURIComponent(text);
+  window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
+}
+
+var CALENDAR_ACCESS_TEMPLATE = 'היי [שם],\n\n' +
+  'כדי שאוכל לנהל את היומן שלך, אני צריכה גישה ל-Google Calendar שלך.\n' +
+  'זה פשוט ולוקח שלוש דקות:\n\n' +
+  '1. פתח/י את Google Calendar (calendar.google.com)\n\n' +
+  '2. לחץ/י על שלוש הנקודות ⋮ ליד שם היומן הראשי שלך (בצד שמאל)\n\n' +
+  '3. בחר/י "הגדרות ושיתוף"\n\n' +
+  '4. גלול/י למטה עד "שיתוף עם אנשים ספציפיים"\n\n' +
+  '5. לחץ/י על "+ הוסף אנשים"\n\n' +
+  '6. הקלד/י את המייל שלי: noyhergass@gmail.com\n\n' +
+  '7. בחר/י הרשאה: "בצע שינויים באירועים"\n\n' +
+  '8. לחץ/י "שלח"\n\n' +
+  'ברגע שתעשה/י את זה — אקבל הודעה ואאשר.\n' +
+  'בשאלות — שלח/י לי הודעה!\n\n' +
+  'נוי';
+
+function getCardCurrentClient() {
+  return document.getElementById('client-select').value || document.getElementById('business-name').value.trim();
+}
+
+function toggleCalendarMessage() {
+  var panel = document.getElementById('calendar-message-panel');
+  if (!panel) return;
+  if (panel.style.display === 'block') {
+    panel.style.display = 'none';
+    return;
+  }
+  var client = getCardCurrentClient();
+  var saved = client ? localStorage.getItem('calendar_message_' + client) : null;
+  document.getElementById('calendar-message-text').value = saved !== null ? saved : CALENDAR_ACCESS_TEMPLATE;
+  panel.style.display = 'block';
+}
+
+function hideCalendarMessage() {
+  var panel = document.getElementById('calendar-message-panel');
+  if (panel) panel.style.display = 'none';
+}
+
+function saveCalendarMessageDraft() {
+  var client = getCardCurrentClient();
+  if (!client) return;
+  localStorage.setItem('calendar_message_' + client, document.getElementById('calendar-message-text').value);
+}
+
+function sendCalendarEmail() {
+  var client = getCardCurrentClient();
+  if (!client) { alert('בחר/י או מלא/י לקוח קודם'); return; }
+  var text = document.getElementById('calendar-message-text').value;
+  localStorage.setItem('calendar_message_' + client, text);
+  var clients = loadClients();
+  var email = (clients[client] && clients[client].email) || '';
+
+  if (!email) {
+    var entered = prompt('לא הוזנה כתובת מייל ללקוח הזה. מה כתובת המייל?');
+    if (entered && entered.trim()) {
+      email = entered.trim();
+      if (clients[client]) {
+        clients[client].email = email;
+        saveClients(clients);
+        var emailField = document.getElementById('client-email');
+        if (emailField && document.getElementById('business-name').value === client) {
+          emailField.value = email;
+        }
+      }
+    }
+  }
+
+  var subject = encodeURIComponent('גישה ליומן שלך');
   var body = encodeURIComponent(text);
   window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
 }
@@ -602,6 +682,7 @@ function newClient() {
   document.querySelectorAll('.tool-checkbox').forEach(function(cb){cb.checked = false;});
   resetCustomItems('task-checkbox-list');
   resetCustomItems('tool-checkbox-list');
+  hideCalendarMessage();
   document.getElementById('client-preview').style.display = 'none';
 }
 
