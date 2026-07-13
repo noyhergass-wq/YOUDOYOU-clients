@@ -50,7 +50,7 @@
 <div class="tab active" id="onboarding">
   <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
     <label style="font-size: 13px; color: #777; white-space: nowrap;">לקוח נוכחי:</label>
-    <select id="onboarding-client-select" onchange="if(this.value){setCurrentClient(this.value);loadCheckboxes();showOnboardingContent();}else{hideOnboardingContent();}" style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    <select id="onboarding-client-select" onchange="hideWelcomeMessage();if(this.value){setCurrentClient(this.value);loadCheckboxes();showOnboardingContent();}else{hideOnboardingContent();}" style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
       <option value="">-- בחר לקוח --</option>
     </select>
     <button onclick="newOnboardingClient()" style="padding: 8px 16px; background: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">לקוח חדש</button>
@@ -72,7 +72,19 @@
       <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>הגדרת הוראת קבע (הו"ק)</label></li>
       <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>תיאום שיחת האפיון (45–60 דקות) — נקבע בשיחת המכירה</label></li>
       <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>שמירת ההסכם החתום בתיקיית ההסכמים בדרייב</label></li>
-      <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>שליחת הודעת ברוכים הבאים (אופציונלי)</label></li>
+      <li style="flex-direction: column; align-items: stretch;">
+        <div style="display: flex; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" class="chk" onchange="updateProgress()">
+          <label style="flex: 1;">שליחת הודעת ברוכים הבאים (אופציונלי)</label>
+          <button type="button" onclick="toggleWelcomeMessage()" title="הצג/הסתר טקסט הודעה" style="background: none; border: 1px solid #ddd; border-radius: 4px; width: 22px; height: 22px; cursor: pointer; font-size: 14px; line-height: 1; color: #666; flex-shrink: 0;">+</button>
+        </div>
+        <div id="welcome-message-panel" style="display: none; margin-top: 10px;">
+          <textarea id="welcome-message-text" oninput="saveWelcomeMessageDraft()" style="width: 100%; min-height: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; font-family: inherit; direction: rtl; resize: vertical;"></textarea>
+          <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
+            <button type="button" onclick="sendWelcomeEmail()" style="padding: 8px 16px; background: #1a1a2e; color: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">שלח במייל</button>
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
   <div class="card">
@@ -292,6 +304,53 @@ function hideOnboardingContent() {
   var content = document.getElementById('onboarding-content');
   if (msg) msg.style.display = 'block';
   if (content) content.style.display = 'none';
+}
+
+var WELCOME_MESSAGE_TEMPLATE = 'שמחה שהתחלנו את הדרך ביחד!\n\n' +
+  'כדי שנוכל להפיק את המקסימום משיחת האפיון, הייתי שמחה אם תכין/י כמה דברים מראש:\n\n' +
+  '1. רשימת אנשי קשר קבועים — שם + טלפון + מייל\n' +
+  '   (רו"ח, עו"ד, לקוחות / ספקים עיקריים)\n\n' +
+  '2. גישה ליומן גוגל שלך — אשלח לך מדריך קצר בנפרד\n\n' +
+  '3. גישה לכלי החשבוניות שלך (חשבונית ירוקה וכד׳)\n\n' +
+  '4. לחשוב: אילו משימות הייתם רוצה להעביר אליי מהיום הראשון?\n\n' +
+  'שיחת האפיון תיקח כ-45 דקות ובסופה אנחנו מוכנים לצאת לדרך.\n' +
+  'נתראה ב[תאריך ושעה]!\n\n' +
+  'נוי';
+
+function toggleWelcomeMessage() {
+  var panel = document.getElementById('welcome-message-panel');
+  if (!panel) return;
+  if (panel.style.display === 'block') {
+    panel.style.display = 'none';
+    return;
+  }
+  var client = getCurrentClient();
+  var saved = client ? localStorage.getItem('welcome_message_' + client) : null;
+  document.getElementById('welcome-message-text').value = saved !== null ? saved : WELCOME_MESSAGE_TEMPLATE;
+  panel.style.display = 'block';
+}
+
+function hideWelcomeMessage() {
+  var panel = document.getElementById('welcome-message-panel');
+  if (panel) panel.style.display = 'none';
+}
+
+function saveWelcomeMessageDraft() {
+  var client = getCurrentClient();
+  if (!client) return;
+  localStorage.setItem('welcome_message_' + client, document.getElementById('welcome-message-text').value);
+}
+
+function sendWelcomeEmail() {
+  var client = getCurrentClient();
+  if (!client) { alert('בחר/י לקוח קודם'); return; }
+  var text = document.getElementById('welcome-message-text').value;
+  localStorage.setItem('welcome_message_' + client, text);
+  var clients = loadClients();
+  var email = (clients[client] && clients[client].email) || '';
+  var subject = encodeURIComponent('ברוכים הבאים ל-YOU DO YOU!');
+  var body = encodeURIComponent(text);
+  window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
 }
 
 function showTab(name, btn) {
@@ -564,6 +623,7 @@ function newOnboardingClient() {
     populateClientSelect();
     loadCheckboxes();
     showOnboardingContent();
+    hideWelcomeMessage();
     updateTracker();
   }
 }
