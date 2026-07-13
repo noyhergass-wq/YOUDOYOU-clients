@@ -50,16 +50,20 @@
 <div class="tab active" id="onboarding">
   <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
     <label style="font-size: 13px; color: #777; white-space: nowrap;">לקוח נוכחי:</label>
-    <select id="onboarding-client-select" onchange="if(this.value){setCurrentClient(this.value);loadCheckboxes();}" style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+    <select id="onboarding-client-select" onchange="if(this.value){setCurrentClient(this.value);loadCheckboxes();showOnboardingContent();}else{hideOnboardingContent();}" style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
       <option value="">-- בחר לקוח --</option>
     </select>
     <button onclick="newOnboardingClient()" style="padding: 8px 16px; background: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">לקוח חדש</button>
   </div>
-  <div style="margin-bottom: 16px; font-size: 12px; color: #999; text-align: center;">
-    <span id="prog-text-top">0 / 14 סעיפים</span>
-    <div class="progress" style="margin-top: 6px;"><div class="progress-fill" id="prog-fill-top"></div></div>
+  <div id="no-client-msg" style="text-align: center; padding: 40px 20px; color: #999; font-size: 14px;">
+    בחר לקוח קיים או צור לקוח חדש כדי להתחיל
   </div>
-  <div class="card">
+  <div id="onboarding-content" style="display: none;">
+    <div style="margin-bottom: 16px; font-size: 12px; color: #999; text-align: center;">
+      <span id="prog-text-top">0 / 14 סעיפים</span>
+      <div class="progress" style="margin-top: 6px;"><div class="progress-fill" id="prog-fill-top"></div></div>
+    </div>
+    <div class="card">
     <div class="card-title">שלב 1 — סגירה עסקית</div>
     <ul class="checklist">
       <li><input type="checkbox" class="chk" onchange="updateProgress()"><label>קבלת תשלום ראשון באשראי טלפוני</label></li>
@@ -91,6 +95,7 @@
       <span id="prog-text">0 / 14 סעיפים</span>
       <div class="progress"><div class="progress-fill" id="prog-fill"></div></div>
     </div>
+  </div>
   </div>
 </div>
 
@@ -269,6 +274,20 @@
 </div>
 
 <script>
+function showOnboardingContent() {
+  var msg = document.getElementById('no-client-msg');
+  var content = document.getElementById('onboarding-content');
+  if (msg) msg.style.display = 'none';
+  if (content) content.style.display = 'block';
+}
+
+function hideOnboardingContent() {
+  var msg = document.getElementById('no-client-msg');
+  var content = document.getElementById('onboarding-content');
+  if (msg) msg.style.display = 'block';
+  if (content) content.style.display = 'none';
+}
+
 function showTab(name, btn) {
   var ob = document.getElementById('onboarding');
   var cd = document.getElementById('card');
@@ -484,6 +503,7 @@ function newOnboardingClient() {
     setCurrentClient(name);
     populateClientSelect();
     loadCheckboxes();
+    showOnboardingContent();
     updateTracker();
   }
 }
@@ -621,31 +641,4 @@ function updateTracker() {
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color9 + '; font-weight: bold;">✓</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">' + c.hours + '</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">₪' + c.cost + '</td>' +
-                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; font-weight: bold; color: ' + (progress >= 66 ? '#e8b86d' : '#999') + ';">' + progress + '%</td>';
-    tbody.appendChild(row);
-    totalRevenue += c.cost;
-  }
-
-  document.getElementById('summary-count').textContent = 'לקוחות פעילים: ' + Object.keys(clients).length;
-  document.getElementById('summary-revenue').textContent = 'הכנסה: ₪' + totalRevenue;
-}
-
-function initPage() {
-  populateClientSelect();
-  loadCheckboxes();
-  updateTracker();
-
-  var d = new Date();
-  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPage);
-} else {
-  initPage();
-}
-</script>
-
-</body>
-</html>
-             
+   
