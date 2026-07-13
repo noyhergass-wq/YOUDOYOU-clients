@@ -641,4 +641,43 @@ function updateTracker() {
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; color: ' + color9 + '; font-weight: bold;">✓</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">' + c.hours + '</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd;">₪' + c.cost + '</td>' +
+                    '<td style="padding: 8px; text-align: center; border-right: 1px solid #ddd; font-weight: bold; color: ' + (progress >= 66 ? '#e8b86d' : '#999') + ';">' + progress + '%</td>';
+    tbody.appendChild(row);
+    totalRevenue += c.cost;
+  }
+
+  document.getElementById('summary-count').textContent = 'לקוחות פעילים: ' + Object.keys(clients).length;
+  document.getElementById('summary-revenue').textContent = 'הכנסה: ₪' + totalRevenue;
+}
+
+function initPage() {
+  populateClientSelect();
+
+  var current = localStorage.getItem('currentClient') || '';
+  if (current) {
+    var obSelect = document.getElementById('onboarding-client-select');
+    if (obSelect) obSelect.value = current;
+    var clSelect = document.getElementById('client-select');
+    if (clSelect) clSelect.value = current;
+    showOnboardingContent();
+    loadClientToForm(current);
+  }
+
+  loadCheckboxes();
+  updateTracker();
+
+  var d = new Date();
+  document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPage);
+} else {
+  initPage();
+}
+</script>
+
+</body>
+</html>
+
    
