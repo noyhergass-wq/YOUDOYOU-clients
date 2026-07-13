@@ -655,11 +655,8 @@ function initPage() {
 
   var current = localStorage.getItem('currentClient') || '';
   if (current) {
-    var obSelect = document.getElementById('onboarding-client-select');
-    if (obSelect) obSelect.value = current;
     var clSelect = document.getElementById('client-select');
     if (clSelect) clSelect.value = current;
-    showOnboardingContent();
     loadClientToForm(current);
   }
 
