@@ -384,7 +384,7 @@ function sendWelcomeEmail() {
 
   var subject = encodeURIComponent('ברוכים הבאים ל-YOU DO YOU!');
   var body = encodeURIComponent(text);
-  window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email) + '&su=' + subject + '&body=' + body, '_blank');
 }
 
 var CALENDAR_ACCESS_TEMPLATE = 'היי [שם],\n\n' +
@@ -455,7 +455,7 @@ function sendCalendarEmail() {
 
   var subject = encodeURIComponent('גישה ליומן שלך');
   var body = encodeURIComponent(text);
-  window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email) + '&su=' + subject + '&body=' + body, '_blank');
 }
 
 function exportBackup() {
