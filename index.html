@@ -35,6 +35,18 @@
 </head>
 <body>
 
+<div id="dashboard-gate" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #fdf9f4; border: 1px solid #e5d9c8; border-radius: 16px; padding: 36px 30px; max-width: 320px; width: 100%; text-align: center;">
+    <div style="color: #4a3525; font-size: 22px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 6px;">YOU DO YOU</div>
+    <div style="color: #a08b73; font-size: 13px; margin-bottom: 22px;">הזן/י סיסמה כדי להיכנס</div>
+    <input type="password" id="gate-password-input" placeholder="סיסמה" style="width: 100%; padding: 12px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl; margin-bottom: 10px; text-align: center;" onkeydown="if(event.key==='Enter'){submitGateLogin();}">
+    <button onclick="submitGateLogin()" style="width: 100%; padding: 12px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">כניסה</button>
+    <div id="gate-error" style="color: #b3261e; font-size: 12.5px; margin-top: 12px; min-height: 16px;"></div>
+  </div>
+</div>
+
+<div id="app-content" style="display: none;">
+
 <div class="header">
   <h1>YOU DO YOU</h1>
   <small>ניהול משרד מרחוק</small>
@@ -310,6 +322,8 @@
 
 </div>
 
+</div>
+
 <script>
 function showOnboardingContent() {
   var msg = document.getElementById('no-client-msg');
@@ -335,34 +349,43 @@ function getSavedDashboardToken() {
   return null;
 }
 
-function loginToDashboard() {
-  var password = prompt('סיסמת הדשבורד (לשליחת מיילים):');
-  if (!password) return Promise.resolve(null);
-  return fetch(DASHBOARD_LOGIN_ENDPOINT, {
+function submitGateLogin() {
+  var input = document.getElementById('gate-password-input');
+  var errorEl = document.getElementById('gate-error');
+  var password = input.value;
+  errorEl.textContent = '';
+  if (!password) return;
+  fetch(DASHBOARD_LOGIN_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password: password })
   }).then(function(res) {
-    if (!res.ok) { alert('סיסמה שגויה'); return null; }
+    if (!res.ok) { errorEl.textContent = 'סיסמה שגויה'; input.value = ''; input.focus(); return null; }
     return res.json();
   }).then(function(data) {
-    if (!data) return null;
+    if (!data) return;
     localStorage.setItem('dashboard_token', data.token);
     localStorage.setItem('dashboard_token_expires', String(data.expiresAt));
-    return data.token;
+    enterDashboard();
   }).catch(function() {
-    alert('שגיאה בהתחברות לשרת');
-    return null;
+    errorEl.textContent = 'שגיאה בהתחברות לשרת, נסי שוב';
   });
 }
 
-function ensureDashboardToken() {
-  var existing = getSavedDashboardToken();
-  if (existing) return Promise.resolve(existing);
-  return loginToDashboard();
+function enterDashboard() {
+  document.getElementById('dashboard-gate').style.display = 'none';
+  document.getElementById('app-content').style.display = 'block';
+  initPage();
+}
+
+function checkDashboardAccess() {
+  if (getSavedDashboardToken()) enterDashboard();
 }
 
 function sendDashboardEmail(to, subject, message, btn) {
+  var token = getSavedDashboardToken();
+  if (!token) { alert('החיבור פג — רענני את הדף והתחברי שוב'); return; }
+
   var originalText = btn ? btn.textContent : '';
   if (btn) { btn.disabled = true; btn.textContent = 'שולח...'; btn.style.opacity = '0.7'; }
 
@@ -375,23 +398,20 @@ function sendDashboardEmail(to, subject, message, btn) {
     }
   }
 
-  ensureDashboardToken().then(function(token) {
-    if (!token) { finishError(); return; }
-    return fetch(DASHBOARD_EMAIL_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ to: to, subject: subject, message: message })
-    }).then(function(res) {
-      if (res.status === 401) {
-        localStorage.removeItem('dashboard_token');
-        localStorage.removeItem('dashboard_token_expires');
-        throw new Error('unauthorized');
-      }
-      if (!res.ok) throw new Error('send failed');
-      if (btn) { btn.textContent = 'נשלח ✓'; btn.style.opacity = '1'; }
-      setTimeout(function() { if (btn) { btn.disabled = false; btn.textContent = originalText; } }, 2000);
-    }).catch(finishError);
-  });
+  fetch(DASHBOARD_EMAIL_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ to: to, subject: subject, message: message })
+  }).then(function(res) {
+    if (res.status === 401) {
+      localStorage.removeItem('dashboard_token');
+      localStorage.removeItem('dashboard_token_expires');
+      throw new Error('unauthorized');
+    }
+    if (!res.ok) throw new Error('send failed');
+    if (btn) { btn.textContent = 'נשלח ✓'; btn.style.opacity = '1'; }
+    setTimeout(function() { if (btn) { btn.disabled = false; btn.textContent = originalText; } }, 2000);
+  }).catch(finishError);
 }
 
 var WELCOME_MESSAGE_TEMPLATE = 'היי, שמחה שהתחלנו את הדרך ביחד :)\n\n' +
@@ -1079,9 +1099,9 @@ function initPage() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPage);
+  document.addEventListener('DOMContentLoaded', checkDashboardAccess);
 } else {
-  initPage();
+  checkDashboardAccess();
 }
 </script>
 
