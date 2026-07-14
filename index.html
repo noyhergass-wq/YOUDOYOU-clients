@@ -219,11 +219,13 @@
     <div class="card-title">5️⃣ אנשי קשר קבועים</div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">רואה חשבון (שם + טלפון + מייל)</label>
-      <input type="text" id="accountant" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+      <div id="accountant-list"></div>
+      <button type="button" onclick="addContactEntry('accountant-list','accountant-input')" style="padding: 6px 14px; background: #fff; color: #1a1a2e; border: 1px solid #1a1a2e; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">+ הוסף</button>
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">עורך/ת דין (שם + טלפון + מייל)</label>
-      <input type="text" id="lawyer" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
+      <div id="lawyer-list"></div>
+      <button type="button" onclick="addContactEntry('lawyer-list','lawyer-input')" style="padding: 6px 14px; background: #fff; color: #1a1a2e; border: 1px solid #1a1a2e; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">+ הוסף</button>
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">לקוחות / ספקים עיקריים</label>
@@ -679,6 +681,51 @@ function addCustomChecklistItem(inputId, containerId, checkboxClass) {
   input.value = '';
 }
 
+function addContactEntry(listId, inputClass, initialValue) {
+  var list = document.getElementById(listId);
+  var row = document.createElement('div');
+  row.style.cssText = 'display: flex; gap: 8px; margin-bottom: 6px;';
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.className = inputClass;
+  input.value = initialValue || '';
+  input.style.cssText = 'flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;';
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = '×';
+  btn.title = 'הסר';
+  btn.style.cssText = 'padding: 0 12px; background: #fff; color: #c0392b; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; font-size: 16px; flex-shrink: 0;';
+  btn.onclick = function() { removeContactEntry(listId, row); };
+  row.appendChild(input);
+  row.appendChild(btn);
+  list.appendChild(row);
+  return input;
+}
+
+function removeContactEntry(listId, row) {
+  var list = document.getElementById(listId);
+  if (list.children.length > 1) {
+    row.remove();
+  } else {
+    row.querySelector('input').value = '';
+  }
+}
+
+function rebuildContactList(listId, inputClass, value) {
+  var list = document.getElementById(listId);
+  list.innerHTML = '';
+  var lines = (value || '').split('\n').filter(function(l) { return l.trim() !== ''; });
+  if (lines.length === 0) lines = [''];
+  lines.forEach(function(line) { addContactEntry(listId, inputClass, line); });
+}
+
+function getContactListValue(inputClass) {
+  return Array.from(document.querySelectorAll('.' + inputClass))
+    .map(function(i) { return i.value.trim(); })
+    .filter(Boolean)
+    .join('\n');
+}
+
 function loadClientToForm(clientName) {
   var clients = loadClients();
   if (clients[clientName]) {
@@ -694,8 +741,8 @@ function loadClientToForm(clientName) {
     document.getElementById('work-hours').value = c.workHours || '';
     document.getElementById('comm-method').value = c.commMethod || '';
     document.getElementById('update-freq').value = c.updateFreq || '';
-    document.getElementById('accountant').value = c.accountant || '';
-    document.getElementById('lawyer').value = c.lawyer || '';
+    rebuildContactList('accountant-list', 'accountant-input', c.accountant);
+    rebuildContactList('lawyer-list', 'lawyer-input', c.lawyer);
     document.getElementById('key-contacts').value = c.keyContacts || '';
     document.getElementById('expectations').value = c.expectations || '';
     document.getElementById('start-from').value = c.startFrom || '';
@@ -734,8 +781,8 @@ function newClient() {
   document.getElementById('work-hours').value = '';
   document.getElementById('comm-method').value = '';
   document.getElementById('update-freq').value = '';
-  document.getElementById('accountant').value = '';
-  document.getElementById('lawyer').value = '';
+  rebuildContactList('accountant-list', 'accountant-input', '');
+  rebuildContactList('lawyer-list', 'lawyer-input', '');
   document.getElementById('key-contacts').value = '';
   document.getElementById('expectations').value = '';
   document.getElementById('start-from').value = '';
@@ -815,8 +862,8 @@ function saveClient() {
     workHours: document.getElementById('work-hours').value,
     commMethod: document.getElementById('comm-method').value,
     updateFreq: document.getElementById('update-freq').value,
-    accountant: document.getElementById('accountant').value,
-    lawyer: document.getElementById('lawyer').value,
+    accountant: getContactListValue('accountant-input'),
+    lawyer: getContactListValue('lawyer-input'),
     keyContacts: document.getElementById('key-contacts').value,
     expectations: document.getElementById('expectations').value,
     startFrom: document.getElementById('start-from').value,
@@ -929,6 +976,9 @@ function initPage() {
     var clSelect = document.getElementById('client-select');
     if (clSelect) clSelect.value = current;
     loadClientToForm(current);
+  } else {
+    rebuildContactList('accountant-list', 'accountant-input', '');
+    rebuildContactList('lawyer-list', 'lawyer-input', '');
   }
 
   loadCheckboxes();
