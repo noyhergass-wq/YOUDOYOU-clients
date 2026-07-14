@@ -219,17 +219,12 @@
     <div class="card-title">5️⃣ אנשי קשר קבועים</div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">רואה חשבון (שם + טלפון + מייל)</label>
-      <div id="accountant-list"></div>
-      <button type="button" onclick="addContactEntry('accountant-list','accountant-input')" style="padding: 6px 14px; background: #fff; color: #1a1a2e; border: 1px solid #1a1a2e; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">+ הוסף</button>
-    </div>
-    <div style="margin-bottom: 12px;">
-      <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">עורך/ת דין (שם + טלפון + מייל)</label>
-      <div id="lawyer-list"></div>
-      <button type="button" onclick="addContactEntry('lawyer-list','lawyer-input')" style="padding: 6px 14px; background: #fff; color: #1a1a2e; border: 1px solid #1a1a2e; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">+ הוסף</button>
+      <input type="text" id="accountant" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; direction: rtl;">
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">לקוחות / ספקים עיקריים</label>
-      <textarea id="key-contacts" placeholder="שם + טלפון + מייל, שורה אחת לכל אדם" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; direction: rtl; min-height: 60px; font-family: inherit;"></textarea>
+      <div id="key-contacts-list"></div>
+      <button type="button" onclick="addContactEntry('key-contacts-list','key-contacts-input')" style="padding: 6px 14px; background: #fff; color: #1a1a2e; border: 1px solid #1a1a2e; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">+ הוסף</button>
     </div>
   </div>
 
@@ -595,7 +590,6 @@ function loadClients() {
       commMethod: 'וטסאפ',
       updateFreq: 'יומי',
       accountant: '',
-      lawyer: '',
       keyContacts: '',
       expectations: 'ניהול חלק של כל הניהול המשרדי היומי',
       startFrom: 'ניהול יומן + תיאום פגישות',
@@ -741,9 +735,8 @@ function loadClientToForm(clientName) {
     document.getElementById('work-hours').value = c.workHours || '';
     document.getElementById('comm-method').value = c.commMethod || '';
     document.getElementById('update-freq').value = c.updateFreq || '';
-    rebuildContactList('accountant-list', 'accountant-input', c.accountant);
-    rebuildContactList('lawyer-list', 'lawyer-input', c.lawyer);
-    document.getElementById('key-contacts').value = c.keyContacts || '';
+    document.getElementById('accountant').value = c.accountant || '';
+    rebuildContactList('key-contacts-list', 'key-contacts-input', c.keyContacts);
     document.getElementById('expectations').value = c.expectations || '';
     document.getElementById('start-from').value = c.startFrom || '';
     document.getElementById('client-hours').value = c.hours || '';
@@ -781,9 +774,8 @@ function newClient() {
   document.getElementById('work-hours').value = '';
   document.getElementById('comm-method').value = '';
   document.getElementById('update-freq').value = '';
-  rebuildContactList('accountant-list', 'accountant-input', '');
-  rebuildContactList('lawyer-list', 'lawyer-input', '');
-  document.getElementById('key-contacts').value = '';
+  document.getElementById('accountant').value = '';
+  rebuildContactList('key-contacts-list', 'key-contacts-input', '');
   document.getElementById('expectations').value = '';
   document.getElementById('start-from').value = '';
   document.getElementById('client-hours').value = '';
@@ -817,7 +809,6 @@ function newOnboardingClient() {
         commMethod: '',
         updateFreq: '',
         accountant: '',
-        lawyer: '',
         keyContacts: '',
         expectations: '',
         startFrom: '',
@@ -862,9 +853,8 @@ function saveClient() {
     workHours: document.getElementById('work-hours').value,
     commMethod: document.getElementById('comm-method').value,
     updateFreq: document.getElementById('update-freq').value,
-    accountant: getContactListValue('accountant-input'),
-    lawyer: getContactListValue('lawyer-input'),
-    keyContacts: document.getElementById('key-contacts').value,
+    accountant: document.getElementById('accountant').value,
+    keyContacts: getContactListValue('key-contacts-input'),
     expectations: document.getElementById('expectations').value,
     startFrom: document.getElementById('start-from').value,
     hours: parseInt(document.getElementById('client-hours').value) || 0,
@@ -977,8 +967,7 @@ function initPage() {
     if (clSelect) clSelect.value = current;
     loadClientToForm(current);
   } else {
-    rebuildContactList('accountant-list', 'accountant-input', '');
-    rebuildContactList('lawyer-list', 'lawyer-input', '');
+    rebuildContactList('key-contacts-list', 'key-contacts-input', '');
   }
 
   loadCheckboxes();
