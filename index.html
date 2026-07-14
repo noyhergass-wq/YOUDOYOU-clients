@@ -268,6 +268,15 @@
 <!-- TRACKER -->
 <div class="tab" id="tracker">
   <div class="card">
+    <div class="card-title">גיבוי נתונים</div>
+    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">כל הנתונים שמורים רק בדפדפן הזה. מומלץ לייצא גיבוי מדי פעם.</p>
+    <div style="display: flex; gap: 10px;">
+      <button onclick="exportBackup()" style="flex: 1; padding: 10px; background: #1a1a2e; color: #e8b86d; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">ייצוא גיבוי</button>
+      <button onclick="triggerImportBackup()" style="flex: 1; padding: 10px; background: #fff; color: #1a1a2e; border: 1px solid #1a1a2e; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">טעינת גיבוי</button>
+      <input type="file" id="backup-file-input" accept="application/json" style="display: none;" onchange="importBackup(this)">
+    </div>
+  </div>
+  <div class="card">
     <div class="card-title">סיכום</div>
     <p id="summary-count">לקוחות פעילים: 0</p>
     <p id="summary-revenue">הכנסה: ₪0</p>
@@ -447,6 +456,60 @@ function sendCalendarEmail() {
   var subject = encodeURIComponent('גישה ליומן שלך');
   var body = encodeURIComponent(text);
   window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
+}
+
+function exportBackup() {
+  var data = {};
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    if (key === 'youdoyou_clients' || key === 'currentClient' ||
+        key.indexOf('onboarding_checkboxes_') === 0 ||
+        key.indexOf('welcome_message_') === 0 ||
+        key.indexOf('calendar_message_') === 0) {
+      data[key] = localStorage.getItem(key);
+    }
+  }
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var dateStr = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = 'youdoyou-backup-' + dateStr + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function triggerImportBackup() {
+  document.getElementById('backup-file-input').click();
+}
+
+function importBackup(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var data;
+    try {
+      data = JSON.parse(e.target.result);
+    } catch (err) {
+      alert('קובץ הגיבוי לא תקין');
+      input.value = '';
+      return;
+    }
+    if (!confirm('טעינת הגיבוי תחליף את כל הנתונים הקיימים בדפדפן הזה. להמשיך?')) {
+      input.value = '';
+      return;
+    }
+    for (var key in data) {
+      localStorage.setItem(key, data[key]);
+    }
+    input.value = '';
+    alert('הגיבוי נטען בהצלחה!');
+    location.reload();
+  };
+  reader.readAsText(file);
 }
 
 function showTab(name, btn) {
