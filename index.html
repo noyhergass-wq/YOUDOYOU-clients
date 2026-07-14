@@ -269,7 +269,8 @@
 <div class="tab" id="tracker">
   <div class="card">
     <div class="card-title">גיבוי נתונים</div>
-    <p style="font-size: 12px; color: #a08b73; margin-bottom: 10px;">כל הנתונים שמורים רק בדפדפן הזה. מומלץ לייצא גיבוי מדי פעם.</p>
+    <p style="font-size: 12px; color: #a08b73; margin-bottom: 6px;">כל הנתונים שמורים רק בדפדפן הזה. מומלץ לייצא גיבוי מדי פעם.</p>
+    <p id="last-backup-status" style="font-size: 13px; font-weight: 600; margin-bottom: 10px;"></p>
     <div style="display: flex; gap: 10px;">
       <button onclick="exportBackup()" style="flex: 1; padding: 10px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">ייצוא גיבוי</button>
       <button onclick="triggerImportBackup()" style="flex: 1; padding: 10px; background: #fdf9f4; color: #4a3525; border: 1px solid #4a3525; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">טעינת גיבוי</button>
@@ -548,6 +549,33 @@ function exportBackup() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  localStorage.setItem('last_backup_at', String(Date.now()));
+  updateBackupStatus();
+}
+
+function updateBackupStatus() {
+  var el = document.getElementById('last-backup-status');
+  if (!el) return;
+  var last = Number(localStorage.getItem('last_backup_at') || 0);
+  if (!last) {
+    el.textContent = '⚠ מעולם לא יוצא גיבוי';
+    el.style.color = '#a8560a';
+    return;
+  }
+  var days = Math.floor((Date.now() - last) / (24 * 60 * 60 * 1000));
+  if (days <= 0) {
+    el.textContent = '✓ גובה היום';
+    el.style.color = '#2f6f4e';
+  } else if (days < 14) {
+    el.textContent = 'גובה לפני ' + days + (days === 1 ? ' יום' : ' ימים');
+    el.style.color = '#a08b73';
+  } else if (days < 30) {
+    el.textContent = '⚠ עברו ' + days + ' ימים מאז הגיבוי האחרון — מומלץ לגבות';
+    el.style.color = '#a8560a';
+  } else {
+    el.textContent = '⚠ עברו ' + days + ' ימים מאז הגיבוי האחרון! מומלץ לגבות עכשיו';
+    el.style.color = '#b3261e';
+  }
 }
 
 function triggerImportBackup() {
@@ -1044,6 +1072,7 @@ function initPage() {
 
   loadCheckboxes();
   updateTracker();
+  updateBackupStatus();
 
   var d = new Date();
   document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
