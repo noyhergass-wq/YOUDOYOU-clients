@@ -84,7 +84,7 @@
         <div id="welcome-message-panel" style="display: none; margin-top: 10px;">
           <textarea id="welcome-message-text" oninput="saveWelcomeMessageDraft()" style="width: 100%; min-height: 200px; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; font-family: inherit; direction: rtl; resize: vertical;"></textarea>
           <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
-            <button type="button" onclick="sendWelcomeEmail()" style="padding: 8px 16px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">שלח במייל</button>
+            <button type="button" onclick="sendWelcomeEmail(this)" style="padding: 8px 16px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">שלח במייל</button>
           </div>
         </div>
       </li>
@@ -186,7 +186,7 @@
       <div id="calendar-message-panel" style="display: none; margin: 4px 0 8px;">
         <textarea id="calendar-message-text" oninput="saveCalendarMessageDraft()" style="width: 100%; min-height: 220px; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; font-family: inherit; direction: rtl; resize: vertical;"></textarea>
         <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
-          <button type="button" onclick="sendCalendarEmail()" style="padding: 8px 16px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">שלח במייל</button>
+          <button type="button" onclick="sendCalendarEmail(this)" style="padding: 8px 16px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">שלח במייל</button>
         </div>
       </div>
       <label><input type="checkbox" class="tool-checkbox" value="אקסל"> אקסל / גוגל שיטס</label>
@@ -324,6 +324,75 @@ function hideOnboardingContent() {
   if (content) content.style.display = 'none';
 }
 
+var DASHBOARD_EMAIL_ENDPOINT = 'https://meeting-scheduler-khaki.vercel.app/api/dashboard-email';
+var DASHBOARD_LOGIN_ENDPOINT = 'https://meeting-scheduler-khaki.vercel.app/api/dashboard-login';
+
+function getSavedDashboardToken() {
+  var token = localStorage.getItem('dashboard_token');
+  var expiresAt = Number(localStorage.getItem('dashboard_token_expires') || 0);
+  if (token && expiresAt > Date.now()) return token;
+  return null;
+}
+
+function loginToDashboard() {
+  var password = prompt('סיסמת הדשבורד (לשליחת מיילים):');
+  if (!password) return Promise.resolve(null);
+  return fetch(DASHBOARD_LOGIN_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: password })
+  }).then(function(res) {
+    if (!res.ok) { alert('סיסמה שגויה'); return null; }
+    return res.json();
+  }).then(function(data) {
+    if (!data) return null;
+    localStorage.setItem('dashboard_token', data.token);
+    localStorage.setItem('dashboard_token_expires', String(data.expiresAt));
+    return data.token;
+  }).catch(function() {
+    alert('שגיאה בהתחברות לשרת');
+    return null;
+  });
+}
+
+function ensureDashboardToken() {
+  var existing = getSavedDashboardToken();
+  if (existing) return Promise.resolve(existing);
+  return loginToDashboard();
+}
+
+function sendDashboardEmail(to, subject, message, btn) {
+  var originalText = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'שולח...'; btn.style.opacity = '0.7'; }
+
+  function finishError() {
+    if (btn) { btn.disabled = false; btn.textContent = originalText; btn.style.opacity = '1'; }
+    if (confirm('השליחה האוטומטית נכשלה. לפתוח את המייל ב-Gmail במקום?')) {
+      var subjectEnc = encodeURIComponent(subject);
+      var bodyEnc = encodeURIComponent(message);
+      window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + subjectEnc + '&body=' + bodyEnc, '_blank');
+    }
+  }
+
+  ensureDashboardToken().then(function(token) {
+    if (!token) { finishError(); return; }
+    return fetch(DASHBOARD_EMAIL_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ to: to, subject: subject, message: message })
+    }).then(function(res) {
+      if (res.status === 401) {
+        localStorage.removeItem('dashboard_token');
+        localStorage.removeItem('dashboard_token_expires');
+        throw new Error('unauthorized');
+      }
+      if (!res.ok) throw new Error('send failed');
+      if (btn) { btn.textContent = 'נשלח ✓'; btn.style.opacity = '1'; }
+      setTimeout(function() { if (btn) { btn.disabled = false; btn.textContent = originalText; } }, 2000);
+    }).catch(finishError);
+  });
+}
+
 var WELCOME_MESSAGE_TEMPLATE = 'היי, שמחה שהתחלנו את הדרך ביחד :)\n\n' +
   'כדי שנוכל להפיק את המקסימום משיחת האפיון, הייתי שמחה אם תכין כמה דברים מראש:\n\n' +
   '1. רשימת אנשי קשר קבועים — שם + טלפון + מייל\n' +
@@ -359,7 +428,7 @@ function saveWelcomeMessageDraft() {
   localStorage.setItem('welcome_message_' + client, document.getElementById('welcome-message-text').value);
 }
 
-function sendWelcomeEmail() {
+function sendWelcomeEmail(btn) {
   var client = getCurrentClient();
   if (!client) { alert('בחר/י לקוח קודם'); return; }
   var text = document.getElementById('welcome-message-text').value;
@@ -379,12 +448,12 @@ function sendWelcomeEmail() {
           emailField.value = email;
         }
       }
+    } else {
+      return;
     }
   }
 
-  var subject = encodeURIComponent('ברוכים הבאים ל-YOU DO YOU!');
-  var body = encodeURIComponent(text);
-  window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email) + '&su=' + subject + '&body=' + body, '_blank');
+  sendDashboardEmail(email, 'ברוכים הבאים ל-YOU DO YOU!', text, btn);
 }
 
 var CALENDAR_ACCESS_TEMPLATE = 'היי [שם],\n\n' +
@@ -430,7 +499,7 @@ function saveCalendarMessageDraft() {
   localStorage.setItem('calendar_message_' + client, document.getElementById('calendar-message-text').value);
 }
 
-function sendCalendarEmail() {
+function sendCalendarEmail(btn) {
   var client = getCardCurrentClient();
   if (!client) { alert('בחר/י או מלא/י לקוח קודם'); return; }
   var text = document.getElementById('calendar-message-text').value;
@@ -450,12 +519,12 @@ function sendCalendarEmail() {
           emailField.value = email;
         }
       }
+    } else {
+      return;
     }
   }
 
-  var subject = encodeURIComponent('גישה ליומן שלך');
-  var body = encodeURIComponent(text);
-  window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email) + '&su=' + subject + '&body=' + body, '_blank');
+  sendDashboardEmail(email, 'גישה ליומן שלך', text, btn);
 }
 
 function exportBackup() {
