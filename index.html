@@ -360,6 +360,7 @@ function submitGateLogin() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password: password })
   }).then(function(res) {
+    if (res.status === 429) { errorEl.textContent = 'יותר מדי ניסיונות — נסי שוב בעוד כמה דקות'; input.value = ''; return null; }
     if (!res.ok) { errorEl.textContent = 'סיסמה שגויה'; input.value = ''; input.focus(); return null; }
     return res.json();
   }).then(function(data) {
