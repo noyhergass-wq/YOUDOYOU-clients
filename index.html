@@ -629,6 +629,15 @@ function importBackup(input) {
   reader.readAsText(file);
 }
 
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function showTab(name, btn) {
   var ob = document.getElementById('onboarding');
   var cd = document.getElementById('card');
@@ -993,17 +1002,17 @@ function showPreview(clientName) {
   var clients = loadClients();
   if (clients[clientName]) {
     var c = clients[clientName];
-    var html = '<strong style="font-size: 14px;">📋 ' + c.businessName + '</strong>' +
+    var html = '<strong style="font-size: 14px;">📋 ' + escapeHtml(c.businessName) + '</strong>' +
                '<p style="margin: 8px 0; font-size: 12px; color: #6b5744;">' +
-               'תחום: ' + c.businessField + ' | ' + c.businessDuration + '</p>' +
-               '<p style="margin: 8px 0; font-size: 12px;">📧 ' + c.email + '</p>' +
-               '<p style="margin: 8px 0; font-size: 12px;">💼 ' + c.hours + ' שעות | ₪' + c.cost + '</p>' +
-               '<p style="margin: 8px 0; font-size: 12px;"><strong>משימות:</strong> ' + (c.tasks || []).join(', ') + '</p>' +
-               '<p style="margin: 8px 0; font-size: 12px;"><strong>כלים:</strong> ' + (c.tools || []).join(', ') + '</p>' +
-               '<p style="margin: 8px 0; font-size: 12px;"><strong>תקשורת:</strong> ' + c.commMethod + ' | ' + c.workHours + '</p>';
+               'תחום: ' + escapeHtml(c.businessField) + ' | ' + escapeHtml(c.businessDuration) + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;">📧 ' + escapeHtml(c.email) + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;">💼 ' + escapeHtml(c.hours) + ' שעות | ₪' + escapeHtml(c.cost) + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>משימות:</strong> ' + (c.tasks || []).map(escapeHtml).join(', ') + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>כלים:</strong> ' + (c.tools || []).map(escapeHtml).join(', ') + '</p>' +
+               '<p style="margin: 8px 0; font-size: 12px;"><strong>תקשורת:</strong> ' + escapeHtml(c.commMethod) + ' | ' + escapeHtml(c.workHours) + '</p>';
     if (c.keyContacts) {
       html += '<p style="margin: 8px 0; font-size: 12px;"><strong>אנשי קשר:</strong><br>' +
-              c.keyContacts.split('\n').filter(function(x){return x.trim();}).join('<br>') + '</p>';
+              c.keyContacts.split('\n').filter(function(x){return x.trim();}).map(escapeHtml).join('<br>') + '</p>';
     }
     document.getElementById('preview-content').innerHTML = html;
     document.getElementById('client-preview').style.display = 'block';
@@ -1057,7 +1066,7 @@ function updateTracker() {
     var row = document.createElement('tr');
     row.style.borderBottom = '1px solid #f0f0f0';
     row.style.background = name === currentClient ? '#f4ede2' : '#fdf9f4';
-    row.innerHTML = '<td style="padding: 8px; text-align: right; border-right: 1px solid #e5d9c8; font-weight: 500;">' + name + (name === currentClient ? ' (עכשיו)' : '') + '</td>' +
+    row.innerHTML = '<td style="padding: 8px; text-align: right; border-right: 1px solid #e5d9c8; font-weight: 500;">' + escapeHtml(name) + (name === currentClient ? ' (עכשיו)' : '') + '</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #e5d9c8; color: ' + color1 + '; font-weight: bold;">' + mark1 + '</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #e5d9c8; color: ' + color2 + '; font-weight: bold;">' + mark2 + '</td>' +
                     '<td style="padding: 8px; text-align: center; border-right: 1px solid #e5d9c8; color: ' + color3 + '; font-weight: bold;">' + mark3 + '</td>' +
