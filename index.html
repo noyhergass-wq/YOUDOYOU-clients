@@ -94,7 +94,7 @@
           <button type="button" onclick="toggleMessagePanel('welcome')" title="הצג/הסתר טקסט הודעה" style="background: none; border: 1px solid #e5d9c8; border-radius: 8px; width: 22px; height: 22px; cursor: pointer; font-size: 14px; line-height: 1; color: #6b5744; flex-shrink: 0;">+</button>
         </div>
         <div id="welcome-message-panel" style="display: none; margin-top: 10px;">
-          <textarea id="welcome-message-text" oninput="saveMessageDraft('welcome')" style="width: 100%; min-height: 200px; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; font-family: inherit; direction: rtl; resize: vertical;"></textarea>
+          <textarea id="welcome-message-text" maxlength="4000" oninput="saveMessageDraft('welcome')" style="width: 100%; min-height: 200px; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; font-family: inherit; direction: rtl; resize: vertical;"></textarea>
           <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
             <button type="button" onclick="sendPanelEmail('welcome', this)" style="padding: 8px 16px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">שלח במייל</button>
           </div>
@@ -142,19 +142,19 @@
     <div class="card-title">1️⃣ היכרות כללית</div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">שם העסק</label>
-      <input type="text" id="business-name" placeholder="שם העסק" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="text" id="business-name" maxlength="100" placeholder="שם העסק" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">תחום עיסוק</label>
-      <input type="text" id="business-field" placeholder="תחום עיסוק" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="text" id="business-field" maxlength="100" placeholder="תחום עיסוק" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">משך זמן פעילות</label>
-      <input type="text" id="business-duration" placeholder="לדוגמה: 5 שנים" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="text" id="business-duration" maxlength="50" placeholder="לדוגמה: 5 שנים" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">תפקיד בעסק</label>
-      <input type="text" id="client-role" placeholder="מנהל/ת, בעלים, כו'" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="text" id="client-role" maxlength="100" placeholder="מנהל/ת, בעלים, כו'" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">מספר עובדים</label>
@@ -162,7 +162,7 @@
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">מייל</label>
-      <input type="email" id="client-email" placeholder="example@email.com" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="email" id="client-email" maxlength="254" placeholder="example@email.com" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
   </div>
 
@@ -181,7 +181,7 @@
     <div style="margin-top: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">אחר:</label>
       <div style="display: flex; gap: 8px;">
-        <input type="text" id="other-tasks" placeholder="משימה נוספת" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomChecklistItem('other-tasks','task-checkbox-list','task-checkbox');}" style="flex: 1; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+        <input type="text" id="other-tasks" maxlength="100" placeholder="משימה נוספת" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomChecklistItem('other-tasks','task-checkbox-list','task-checkbox');}" style="flex: 1; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
         <button type="button" onclick="addCustomChecklistItem('other-tasks','task-checkbox-list','task-checkbox')" style="padding: 10px 16px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap;">הוסף</button>
       </div>
     </div>
@@ -196,7 +196,7 @@
         <button type="button" onclick="toggleMessagePanel('calendar')" title="הצג/הסתר טקסט הודעה" style="background: none; border: 1px solid #e5d9c8; border-radius: 8px; width: 22px; height: 22px; cursor: pointer; font-size: 14px; line-height: 1; color: #6b5744; flex-shrink: 0;">+</button>
       </div>
       <div id="calendar-message-panel" style="display: none; margin: 4px 0 8px;">
-        <textarea id="calendar-message-text" oninput="saveMessageDraft('calendar')" style="width: 100%; min-height: 220px; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; font-family: inherit; direction: rtl; resize: vertical;"></textarea>
+        <textarea id="calendar-message-text" maxlength="4000" oninput="saveMessageDraft('calendar')" style="width: 100%; min-height: 220px; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; font-family: inherit; direction: rtl; resize: vertical;"></textarea>
         <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
           <button type="button" onclick="sendPanelEmail('calendar', this)" style="padding: 8px 16px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">שלח במייל</button>
         </div>
@@ -208,7 +208,7 @@
     <div style="margin-top: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">כלים אחרים:</label>
       <div style="display: flex; gap: 8px;">
-        <input type="text" id="other-tools" placeholder="כלי נוסף" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomChecklistItem('other-tools','tool-checkbox-list','tool-checkbox');}" style="flex: 1; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+        <input type="text" id="other-tools" maxlength="100" placeholder="כלי נוסף" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomChecklistItem('other-tools','tool-checkbox-list','tool-checkbox');}" style="flex: 1; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
         <button type="button" onclick="addCustomChecklistItem('other-tools','tool-checkbox-list','tool-checkbox')" style="padding: 10px 16px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap;">הוסף</button>
       </div>
     </div>
@@ -218,15 +218,15 @@
     <div class="card-title">4️⃣ תקשורת וזמינות</div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">שעות עבודה</label>
-      <input type="text" id="work-hours" placeholder="לדוגמה: 9-18" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="text" id="work-hours" maxlength="50" placeholder="לדוגמה: 9-18" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">דרך תקשורת מועדפת</label>
-      <input type="text" id="comm-method" placeholder="וטסאפ, אימייל, קול, וידאו וכו'" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="text" id="comm-method" maxlength="100" placeholder="וטסאפ, אימייל, קול, וידאו וכו'" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">תדירות עדכונים רצויה</label>
-      <input type="text" id="update-freq" placeholder="יומי, שבועי, לפי הצורך וכו'" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="text" id="update-freq" maxlength="100" placeholder="יומי, שבועי, לפי הצורך וכו'" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
   </div>
 
@@ -234,7 +234,7 @@
     <div class="card-title">5️⃣ אנשי קשר קבועים</div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">רואה חשבון (שם + טלפון + מייל)</label>
-      <input type="text" id="accountant" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
+      <input type="text" id="accountant" maxlength="200" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;">
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">לקוחות / ספקים עיקריים</label>
@@ -247,11 +247,11 @@
     <div class="card-title">6️⃣ ציפיות ובקשות</div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">מה חשוב לך שיקרה בעסק?</label>
-      <textarea id="expectations" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; direction: rtl; min-height: 60px; font-family: inherit;"></textarea>
+      <textarea id="expectations" maxlength="2000" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; direction: rtl; min-height: 60px; font-family: inherit;"></textarea>
     </div>
     <div style="margin-bottom: 12px;">
       <label style="display: block; font-size: 12px; color: #6b5744; margin-bottom: 4px;">ממה היית רוצה שאתחיל?</label>
-      <textarea id="start-from" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; direction: rtl; min-height: 60px; font-family: inherit;"></textarea>
+      <textarea id="start-from" maxlength="2000" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 13px; direction: rtl; min-height: 60px; font-family: inherit;"></textarea>
     </div>
   </div>
 
@@ -779,6 +779,7 @@ function addContactEntry(listId, inputClass, initialValue) {
   input.type = 'text';
   input.className = inputClass;
   input.value = initialValue || '';
+  input.maxLength = 200;
   input.style.cssText = 'flex: 1; padding: 10px; border: 1px solid #e5d9c8; border-radius: 8px; font-size: 14px; direction: rtl;';
   var btn = document.createElement('button');
   btn.type = 'button';
