@@ -281,11 +281,13 @@
 <div class="tab" id="tracker">
   <div class="card">
     <div class="card-title">גיבוי נתונים</div>
-    <p style="font-size: 12px; color: #a08b73; margin-bottom: 6px;">כל הנתונים שמורים רק בדפדפן הזה. מומלץ לייצא גיבוי מדי פעם.</p>
-    <p id="last-backup-status" style="font-size: 13px; font-weight: 600; margin-bottom: 10px;"></p>
+    <p style="font-size: 12px; color: #a08b73; margin-bottom: 6px;">הנתונים מסונכרנים אוטומטית לענן, וגם שמורים בדפדפן הזה.</p>
+    <p id="cloud-sync-status" style="font-size: 13px; font-weight: 600; margin-bottom: 4px;"></p>
+    <p id="last-backup-status" style="font-size: 12px; color: #a08b73; margin-bottom: 10px;"></p>
     <div style="display: flex; gap: 10px;">
-      <button onclick="exportBackup()" style="flex: 1; padding: 10px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">ייצוא גיבוי</button>
-      <button onclick="triggerImportBackup()" style="flex: 1; padding: 10px; background: #fdf9f4; color: #4a3525; border: 1px solid #4a3525; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">טעינת גיבוי</button>
+      <button onclick="exportBackup()" style="flex: 1; padding: 10px; background: #4a3525; color: #fdf9f4; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">ייצוא לקובץ</button>
+      <button onclick="triggerImportBackup()" style="flex: 1; padding: 10px; background: #fdf9f4; color: #4a3525; border: 1px solid #4a3525; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">טעינה מקובץ</button>
+      <button onclick="loadBackupFromCloud()" style="flex: 1; padding: 10px; background: #fdf9f4; color: #4a3525; border: 1px solid #4a3525; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">טעינה מהענן</button>
       <input type="file" id="backup-file-input" accept="application/json" style="display: none;" onchange="importBackup(this)">
     </div>
   </div>
@@ -484,6 +486,7 @@ function saveMessageDraft(type) {
   var client = cfg.getClient();
   if (!client) return;
   localStorage.setItem(cfg.storageKey + client, document.getElementById(cfg.textareaId).value);
+  scheduleCloudSync();
 }
 
 function sendPanelEmail(type, btn) {
@@ -515,7 +518,7 @@ function sendPanelEmail(type, btn) {
   sendDashboardEmail(email, cfg.subject, text, btn);
 }
 
-function exportBackup() {
+function collectBackupData() {
   var data = {};
   for (var i = 0; i < localStorage.length; i++) {
     var key = localStorage.key(i);
@@ -526,6 +529,11 @@ function exportBackup() {
       data[key] = localStorage.getItem(key);
     }
   }
+  return data;
+}
+
+function exportBackup() {
+  var data = collectBackupData();
   var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
@@ -563,6 +571,71 @@ function updateBackupStatus() {
     el.textContent = '⚠ עברו ' + days + ' ימים מאז הגיבוי האחרון! מומלץ לגבות עכשיו';
     el.style.color = '#b3261e';
   }
+}
+
+var CLOUD_BACKUP_ENDPOINT = 'https://meeting-scheduler-khaki.vercel.app/api/dashboard-backup';
+var _cloudSyncTimer = null;
+
+function scheduleCloudSync() {
+  if (_cloudSyncTimer) clearTimeout(_cloudSyncTimer);
+  _cloudSyncTimer = setTimeout(syncBackupToCloud, 3000);
+}
+
+function syncBackupToCloud() {
+  var token = getSavedDashboardToken();
+  if (!token) return;
+  fetch(CLOUD_BACKUP_ENDPOINT, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ data: collectBackupData() })
+  }).then(function(res) {
+    if (res.ok) {
+      localStorage.setItem('last_cloud_sync_at', String(Date.now()));
+      updateCloudSyncStatus();
+    }
+  }).catch(function() {});
+}
+
+function loadBackupFromCloud() {
+  var token = getSavedDashboardToken();
+  if (!token) { alert('יש להתחבר קודם'); return; }
+  fetch(CLOUD_BACKUP_ENDPOINT, {
+    headers: { 'Authorization': 'Bearer ' + token }
+  }).then(function(res) {
+    if (res.status === 404) { alert('אין עדיין גיבוי בענן לחשבון הזה'); return null; }
+    if (!res.ok) throw new Error('failed');
+    return res.json();
+  }).then(function(result) {
+    if (!result) return;
+    if (!confirm('טעינה מהענן תחליף את הנתונים המקומיים בדפדפן הזה. להמשיך?')) return;
+    var data = result.data;
+    for (var key in data) localStorage.setItem(key, data[key]);
+    alert('נטען בהצלחה!');
+    location.reload();
+  }).catch(function() {
+    alert('שגיאה בטעינה מהענן');
+  });
+}
+
+function updateCloudSyncStatus() {
+  var el = document.getElementById('cloud-sync-status');
+  if (!el) return;
+  var last = Number(localStorage.getItem('last_cloud_sync_at') || 0);
+  if (!last) {
+    el.textContent = 'עדיין לא סונכרן לענן';
+    el.style.color = '#a08b73';
+    return;
+  }
+  var mins = Math.floor((Date.now() - last) / 60000);
+  if (mins < 1) {
+    el.textContent = '✓ מסונכרן לענן (עכשיו)';
+  } else if (mins < 60) {
+    el.textContent = '✓ מסונכרן לענן (לפני ' + mins + ' דק\')';
+  } else {
+    var hours = Math.floor(mins / 60);
+    el.textContent = '✓ מסונכרן לענן (לפני ' + hours + ' שע\')';
+  }
+  el.style.color = '#2f6f4e';
 }
 
 function triggerImportBackup() {
@@ -647,6 +720,7 @@ function saveCheckboxes() {
   var client = getCurrentClient();
   if (client) {
     localStorage.setItem('onboarding_checkboxes_' + client, JSON.stringify(states));
+    scheduleCloudSync();
   }
 }
 
@@ -958,6 +1032,7 @@ function saveClient() {
     cost: parseInt(document.getElementById('client-cost').value) || 0
   };
   saveClients(clients);
+  scheduleCloudSync();
   setCurrentClient(name);
   populateClientSelect();
   showPreview(name);
@@ -1070,6 +1145,8 @@ function initPage() {
   loadCheckboxes();
   updateTracker();
   updateBackupStatus();
+  updateCloudSyncStatus();
+  scheduleCloudSync();
 
   var d = new Date();
   document.getElementById('date-display').textContent = d.toLocaleDateString('he-IL');
